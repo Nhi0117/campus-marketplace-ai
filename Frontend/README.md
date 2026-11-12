@@ -1,0 +1,1 @@
+React, Vite, JavaScript, CSS, giao diện và tương tác
