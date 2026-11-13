@@ -14,6 +14,7 @@ const LISTING_TYPES = [
   { id: 'trade', label: 'Trao đổi' },
 ];
 const CONDITIONS = ['Mới', 'Như mới', 'Đã qua sử dụng'];
+const ITEMS_PER_PAGE = 6; // Số sản phẩm hiển thị trên mỗi trang
 
 export const ProductListPage = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -27,6 +28,7 @@ export const ProductListPage = () => {
   const [priceFrom,     setPriceFrom]     = useState('');
   const [priceTo,       setPriceTo]       = useState('');
   const [sortBy,        setSortBy]        = useState('newest');
+  const [currentPage,   setCurrentPage]   = useState(1);
 
   // Sync URL params
   useEffect(() => {
@@ -63,6 +65,20 @@ export const ProductListPage = () => {
       return new Date(b.createdAt) - new Date(a.createdAt);
     });
   }, [products, query, category, school, activeLT, activeCond, priceFrom, priceTo, sortBy]);
+
+  // Tự động quay về trang 1 khi thay đổi điều kiện lọc
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [query, category, school, activeLT, activeCond, priceFrom, priceTo, sortBy]);
+
+  const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
+  const paginatedProducts = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return;
+    setCurrentPage(page);
+    window.scrollTo({ top: 120, behavior: 'smooth' });
+  };
 
   const reset = () => {
     setQuery(''); setCategory('all'); setSchool('ALL');
@@ -206,7 +222,7 @@ export const ProductListPage = () => {
           {filtered.length > 0 ? (
             <>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-                {filtered.map(p => <ProductCard key={p.id} product={p} />)}
+                {paginatedProducts.map(p => <ProductCard key={p.id} product={p} />)}
               </div>
 
               {/* AI suggestion banner */}
@@ -229,14 +245,46 @@ export const ProductListPage = () => {
                 </div>
               )}
 
-              {/* Pagination */}
-              <div className="flex items-center justify-center gap-1 py-4">
-                <button className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs hover:bg-slate-50 transition">‹ Trước</button>
-                <button className="px-3 py-1.5 bg-[#1557A0] text-white rounded-lg text-xs font-bold">1</button>
-                <button className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs hover:bg-slate-50 transition">2</button>
-                <button className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs hover:bg-slate-50 transition">3</button>
-                <span className="px-2 text-slate-400 text-xs">...</span>
-                <button className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs hover:bg-slate-50 transition">Sau ›</button>
+              {/* Phân trang động chuyển sản phẩm */}
+              <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t border-slate-100">
+                <span className="text-xs text-slate-500">
+                  Hiển thị {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} trên tổng số {filtered.length} sản phẩm
+                </span>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    type="button"
+                    onClick={() => handlePageChange(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    ‹ Trước
+                  </button>
+
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                    <button
+                      key={pageNumber}
+                      type="button"
+                      onClick={() => handlePageChange(pageNumber)}
+                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                        currentPage === pageNumber
+                          ? 'bg-[#1557A0] text-white shadow-xs'
+                          : 'border border-slate-200 text-slate-700 hover:bg-slate-50'
+                      }`}
+                    >
+                      {pageNumber}
+                    </button>
+                  ))}
+
+                  <button
+                    type="button"
+                    onClick={() => handlePageChange(currentPage + 1)}
+                    disabled={currentPage === totalPages}
+                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                  >
+                    Sau ›
+                  </button>
+                </div>
               </div>
             </>
           ) : (
