@@ -12,8 +12,11 @@ export const LoginPage = () => {
   const registeredSuccess = searchParams.get('registered') === 'success';
   const queryEmail = searchParams.get('email') || '';
 
-  const [email, setEmail] = useState(queryEmail);
-  const [password, setPassword] = useState('');
+  const [loginRole, setLoginRole] = useState(
+    searchParams.get('role') === 'admin' ? 'admin' : 'student'
+  );
+  const [email, setEmail] = useState(searchParams.get('role') === 'admin' ? 'admin@vnuhcm.edu.vn' : queryEmail);
+  const [password, setPassword] = useState(searchParams.get('role') === 'admin' ? '12345678' : '');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [needRegister, setNeedRegister] = useState(false);
@@ -21,13 +24,26 @@ export const LoginPage = () => {
   const [justRegistered, setJustRegistered] = useState(registeredSuccess);
 
   useEffect(() => {
-    if (queryEmail) {
+    if (queryEmail && loginRole === 'student') {
       setEmail(queryEmail);
     }
     if (registeredSuccess) {
       setJustRegistered(true);
     }
-  }, [queryEmail, registeredSuccess]);
+  }, [queryEmail, registeredSuccess, loginRole]);
+
+  const handleRoleChange = (role) => {
+    setLoginRole(role);
+    setError('');
+    setNeedRegister(false);
+    if (role === 'admin') {
+      setEmail('admin@vnuhcm.edu.vn');
+      setPassword('12345678');
+    } else {
+      setEmail('');
+      setPassword('');
+    }
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -54,7 +70,12 @@ export const LoginPage = () => {
           setNeedRegister(true);
         }
       } else {
-        navigate('/');
+        // Nếu là tài khoản Admin, chuyển thẳng vào Giao diện Quản trị Admin (bỏ qua trang chủ guest/user)
+        if (res.user?.isAdmin || res.user?.email?.toLowerCase().includes('admin')) {
+          navigate('/admin');
+        } else {
+          navigate('/');
+        }
       }
     }, 300);
   };
@@ -66,7 +87,11 @@ export const LoginPage = () => {
     setNeedRegister(false);
     const res = login(targetEmail, '12345678');
     if (res.success) {
-      navigate('/');
+      if (res.user?.isAdmin || targetEmail.toLowerCase().includes('admin')) {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
     }
   };
 
@@ -144,13 +169,49 @@ export const LoginPage = () => {
           {/* CỘT PHẢI: Card Form Đăng nhập */}
           <div className="lg:col-span-5">
             <div className="bg-white border border-slate-200/80 rounded-2xl p-7 lg:p-8 shadow-sm">
+              {/* Tab chọn vai trò đăng nhập */}
+              <div className="grid grid-cols-2 p-1 rounded-xl bg-slate-100 mb-6 border border-slate-200/80">
+                <button
+                  type="button"
+                  onClick={() => handleRoleChange('student')}
+                  className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                    loginRole === 'student'
+                      ? 'bg-white text-[#1557A0] shadow-xs'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  🎓 Sinh viên ĐHQG
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleRoleChange('admin')}
+                  className={`py-2 text-xs font-bold rounded-lg transition-all ${
+                    loginRole === 'admin'
+                      ? 'bg-[#1557A0] text-white shadow-xs'
+                      : 'text-slate-500 hover:text-slate-800'
+                  }`}
+                >
+                  🛡️ Ban Quản Trị (Admin)
+                </button>
+              </div>
+
               <div className="mb-6">
-                <h2 className="text-2xl font-bold text-[#1557A0]">Đăng nhập hệ thống</h2>
+                <h2 className="text-2xl font-bold text-[#1557A0]">
+                  {loginRole === 'admin' ? 'Đăng nhập Cổng Quản Trị' : 'Đăng nhập hệ thống'}
+                </h2>
                 <p className="text-xs text-slate-500 mt-1.5">
-                  Chưa có tài khoản?{' '}
-                  <Link to="/register" className="font-semibold text-[#1557A0] hover:underline">
-                    Đăng ký ngay
-                  </Link>
+                  {loginRole === 'admin' ? (
+                    <span className="text-slate-600 font-medium">
+                      Truy cập trực tiếp khu vực kiểm duyệt tin đăng và quản lý tài khoản ĐHQG.
+                    </span>
+                  ) : (
+                    <>
+                      Chưa có tài khoản?{' '}
+                      <Link to="/register" className="font-semibold text-[#1557A0] hover:underline">
+                        Đăng ký ngay
+                      </Link>
+                    </>
+                  )}
                 </p>
               </div>
 
@@ -231,9 +292,15 @@ export const LoginPage = () => {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full mt-2 py-3 px-4 rounded-xl font-semibold text-sm text-white bg-[#1557A0] hover:bg-[#10437d] transition-all duration-150 shadow-sm active:scale-[0.99] disabled:opacity-50"
+                  className="w-full mt-2 py-3 px-4 rounded-xl font-semibold text-sm text-white bg-[#1557A0] hover:bg-[#10437d] transition-all duration-150 shadow-sm active:scale-[0.99] disabled:opacity-50 flex items-center justify-center gap-2"
                 >
-                  {loading ? 'Đang kiểm tra...' : 'Đăng nhập'}
+                  {loading ? (
+                    'Đang kiểm tra...'
+                  ) : loginRole === 'admin' ? (
+                    '🛡️ Đăng nhập Cổng Quản Trị ĐHQG'
+                  ) : (
+                    'Đăng nhập'
+                  )}
                 </button>
               </form>
 
@@ -241,7 +308,9 @@ export const LoginPage = () => {
               <div className="mt-5 p-3.5 rounded-xl bg-[#EBF4FF] border border-blue-100 flex items-start gap-2.5 text-xs text-slate-600">
                 <ShieldCheck className="w-4 h-4 text-[#1557A0] shrink-0 mt-0.5" />
                 <span>
-                  Tài khoản được liên kết với email sinh viên trường thành viên ĐHQG-HCM để đảm bảo an toàn và tin cậy.
+                  {loginRole === 'admin'
+                    ? 'Tài khoản Quản trị viên được phân quyền bảo mật cao. Sau khi đăng nhập sẽ vào thẳng Cổng Quản trị nội bộ.'
+                    : 'Tài khoản được liên kết với email sinh viên trường thành viên ĐHQG-HCM để đảm bảo an toàn và tin cậy.'}
                 </span>
               </div>
 

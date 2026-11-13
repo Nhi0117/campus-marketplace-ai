@@ -1,12 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Outlet, useLocation } from 'react-router-dom';
+import { Outlet, useLocation, Navigate } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { AIChatbot } from '../ai/AIChatbot';
 import { SplashScreen } from '../common/SplashScreen';
+import { useAuth } from '../../context/AuthContext';
 
 export const Layout = () => {
+  const { user } = useAuth();
   const location = useLocation();
+
+  // Nếu tài khoản Admin đang đăng nhập và không phải đang cố tình xem trước trang sinh viên
+  // thì tự động chuyển thẳng sang khu vực Quản trị Admin (/admin), bỏ qua toàn bộ trang của khách/người dùng
+  const isPreviewMode = new URLSearchParams(location.search).get('view') === 'student';
+  if (user?.isAdmin && !isPreviewMode) {
+    return <Navigate to="/admin" replace />;
+  }
+
   const [showSplash, setShowSplash] = useState(() => {
     // Chỉ hiện splash screen 1 lần đầu khi mở tab mới
     return !sessionStorage.getItem('has_seen_splash');
