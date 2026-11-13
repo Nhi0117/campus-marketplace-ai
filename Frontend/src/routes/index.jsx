@@ -31,6 +31,7 @@ import { AdminPage } from '../pages/Admin';
 import { AdminReportsPage } from '../pages/Admin/Reports';
 import { AdminReportDetailPage } from '../pages/Admin/ReportDetail';
 import { AdminUsersPage } from '../pages/Admin/Users';
+import { AdminSettingsPage } from '../pages/Admin/Settings';
 
 // Other
 import { NotFoundPage } from '../pages/NotFound';
@@ -76,6 +77,7 @@ export const AppRoutes = () => {
         <Route path="reports" element={<AdminReportsPage />} />
         <Route path="reports/:id" element={<AdminReportDetailPage />} />
         <Route path="users" element={<AdminUsersPage />} />
+        <Route path="settings" element={<AdminSettingsPage />} />
       </Route>
     </Routes>
   );

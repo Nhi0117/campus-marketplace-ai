@@ -11,7 +11,7 @@ export const AdminSidebar = ({ activeTab = 'listings' }) => {
     { id: 'listings', label: 'Duyệt tin đăng', path: '/admin', icon: CheckSquare },
     { id: 'reports', label: 'Xử lý báo cáo', path: '/admin/reports', icon: Flag },
     { id: 'users', label: 'Quản lý tài khoản', path: '/admin/users', icon: Users },
-    { id: 'settings', label: 'Cài đặt hệ thống', path: '/admin', icon: Settings },
+    { id: 'settings', label: 'Cài đặt hệ thống', path: '/admin/settings', icon: Settings },
   ];
 
   const handleLogout = () => {
@@ -23,7 +23,7 @@ export const AdminSidebar = ({ activeTab = 'listings' }) => {
     <aside className="w-64 bg-white border-r border-slate-200 min-h-[calc(100vh-64px)] flex flex-col justify-between shrink-0">
       <div className="p-4 space-y-6">
         {/* Logo Admin */}
-        <Link to="/" className="block px-2">
+        <Link to="/admin" className="block px-2">
           <img src="/logo.svg" alt="Campus Marketplace" className="h-9 w-auto object-contain mb-1" />
           <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">Khu vực Quản Trị ĐHQG</span>
         </Link>
