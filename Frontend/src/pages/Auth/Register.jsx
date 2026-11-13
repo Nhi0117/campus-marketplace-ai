@@ -21,6 +21,7 @@ export const RegisterPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [error, setError] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -32,6 +33,7 @@ export const RegisterPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
+    setSuccessMessage('');
 
     if (!fullName.trim()) {
       setError('Vui lòng nhập họ và tên của bạn.');
@@ -64,7 +66,10 @@ export const RegisterPage = () => {
       if (!res.success) {
         setError(res.message);
       } else {
-        navigate('/settings');
+        setSuccessMessage('Bạn đã tạo tài khoản thành công! Đang chuyển hướng sang trang đăng nhập...');
+        setTimeout(() => {
+          navigate(`/login?registered=success&email=${encodeURIComponent(email)}`);
+        }, 1200);
       }
     }, 400);
   };
@@ -155,6 +160,13 @@ export const RegisterPage = () => {
               </div>
 
               <form onSubmit={handleSubmit} className="space-y-4">
+                {successMessage && (
+                  <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-300 flex items-center gap-2 text-xs font-bold text-emerald-800 shadow-xs animate-pulse">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>{successMessage}</span>
+                  </div>
+                )}
+
                 {error && (
                   <div className="p-3 rounded-xl bg-red-50 border border-red-200 flex items-center gap-2 text-xs text-red-600">
                     <AlertCircle className="w-4 h-4 shrink-0" />

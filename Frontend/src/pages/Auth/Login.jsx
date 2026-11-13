@@ -1,17 +1,33 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, ShieldCheck, Sparkles, AlertCircle, ArrowRight, UserPlus } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Eye, EyeOff, ShieldCheck, Sparkles, AlertCircle, ArrowRight, UserPlus, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
-  const [email, setEmail] = useState('');
+
+  const searchParams = new URLSearchParams(location.search);
+  const registeredSuccess = searchParams.get('registered') === 'success';
+  const queryEmail = searchParams.get('email') || '';
+
+  const [email, setEmail] = useState(queryEmail);
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [needRegister, setNeedRegister] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [justRegistered, setJustRegistered] = useState(registeredSuccess);
+
+  useEffect(() => {
+    if (queryEmail) {
+      setEmail(queryEmail);
+    }
+    if (registeredSuccess) {
+      setJustRegistered(true);
+    }
+  }, [queryEmail, registeredSuccess]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -137,6 +153,19 @@ export const LoginPage = () => {
                   </Link>
                 </p>
               </div>
+
+              {/* Thông báo tạo tài khoản thành công */}
+              {justRegistered && !error && (
+                <div className="p-4 rounded-xl mb-4 bg-emerald-50 border border-emerald-300 text-xs text-emerald-900 space-y-1 shadow-xs">
+                  <div className="flex items-center gap-2 font-bold text-emerald-800">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Bạn đã tạo tài khoản thành công!</span>
+                  </div>
+                  <p className="text-[11px] text-emerald-700">
+                    Vui lòng nhập mật khẩu bạn vừa đăng ký để đăng nhập vào hệ thống.
+                  </p>
+                </div>
+              )}
 
               {/* Thông báo lỗi khi tài khoản chưa tồn tại */}
               {error && (

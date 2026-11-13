@@ -62,6 +62,14 @@ export const AuthProvider = ({ children }) => {
       };
     }
 
+    if (found.status === 'locked') {
+      return {
+        success: false,
+        error: 'ACCOUNT_LOCKED',
+        message: 'Tài khoản này đã bị khóa bởi Quản trị viên do vi phạm quy chế. Vui lòng liên hệ ban quản trị ĐHQG-HCM!'
+      };
+    }
+
     setUser(found);
     return { success: true, user: found };
   };
@@ -106,9 +114,41 @@ export const AuthProvider = ({ children }) => {
     };
 
     setUsersList(prev => [newUser, ...prev]);
-    setUser(newUser);
-
+    // Không tự động đăng nhập - để người dùng chuyển về trang login đăng nhập
     return { success: true, user: newUser };
+  };
+
+  // Admin: Xóa tài khoản vĩnh viễn (người dùng muốn vào lại phải đăng ký lại)
+  const deleteUser = (userId) => {
+    setUsersList(prev => prev.filter(u => u.id !== userId));
+    // Nếu tài khoản đang đăng nhập bị xóa, đăng xuất ngay lập tức
+    if (user?.id === userId) {
+      setUser(null);
+    }
+  };
+
+  // Admin: Khóa hoặc Mở khóa tài khoản
+  const toggleUserLock = (userId) => {
+    setUsersList(prev => prev.map(u => {
+      if (u.id === userId) {
+        const nextStatus = u.status === 'active' ? 'locked' : 'active';
+        return {
+          ...u,
+          status: nextStatus,
+          statusText: nextStatus === 'active' ? 'Hoạt động' : 'Bị khóa',
+        };
+      }
+      return u;
+    }));
+
+    // Cập nhật session nếu tài khoản hiện tại bị khóa
+    if (user?.id === userId) {
+      setUser(prev => prev ? {
+        ...prev,
+        status: prev.status === 'active' ? 'locked' : 'active',
+        statusText: prev.status === 'active' ? 'Bị khóa' : 'Hoạt động',
+      } : null);
+    }
   };
 
   // Cập nhật thông tin hồ sơ
@@ -150,6 +190,8 @@ export const AuthProvider = ({ children }) => {
       setUsersList,
       login,
       register,
+      deleteUser,
+      toggleUserLock,
       updateUser,
       logout,
       savedProducts,
