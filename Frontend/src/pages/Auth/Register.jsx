@@ -5,10 +5,11 @@ import { useAuth } from '../../context/AuthContext';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { register } = useAuth();
 
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
+  const [schoolName, setSchoolName] = useState('Đại học Bách Khoa');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,12 +25,12 @@ export const RegisterPage = () => {
       setError('Vui lòng nhập họ và tên.');
       return;
     }
-    if (!email) {
-      setError('Vui lòng nhập email trường cấp.');
+    if (!email || !email.includes('@')) {
+      setError('Vui lòng nhập email hợp lệ.');
       return;
     }
-    if (password.length < 8) {
-      setError('Mật khẩu phải có tối thiểu 8 ký tự.');
+    if (password.length < 6) {
+      setError('Mật khẩu phải có tối thiểu 6 ký tự.');
       return;
     }
     if (password !== confirmPassword) {
@@ -39,7 +40,7 @@ export const RegisterPage = () => {
 
     setLoading(true);
     setTimeout(() => {
-      login(email, password);
+      register({ name: fullName, email, schoolName });
       setLoading(false);
       navigate('/');
     }, 400);
@@ -153,17 +154,37 @@ export const RegisterPage = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Email ĐHQG-HCM
+                    Trường Đại học <span className="text-red-500">*</span>
+                  </label>
+                  <select
+                    value={schoolName}
+                    onChange={(e) => setSchoolName(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 bg-white focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10"
+                  >
+                    <option value="Đại học Bách Khoa">Đại học Bách Khoa (HCMUT)</option>
+                    <option value="Đại học Khoa học Tự nhiên">Đại học Khoa học Tự nhiên (HCMUS)</option>
+                    <option value="Đại học Công nghệ Thông tin">Đại học Công nghệ Thông tin (UIT)</option>
+                    <option value="Đại học Kinh tế - Luật">Đại học Kinh tế - Luật (UEL)</option>
+                    <option value="Đại học KHXH & Nhân văn">Đại học KHXH & Nhân văn (USSH)</option>
+                    <option value="Đại học Quốc Tế">Đại học Quốc Tế (IU)</option>
+                    <option value="Khoa Y - ĐHQG-HCM">Khoa Y - ĐHQG-HCM (MED)</option>
+                    <option value="Đại học An Giang">Đại học An Giang (AGU)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                    Email liên hệ <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Bắt buộc dùng email trường cấp (ví dụ: @st.hcmuaf...)"
+                    placeholder="ví dụ: nguyenvana@gmail.com hoặc email trường"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10"
                   />
                   <p className="text-[11px] text-slate-400 mt-1">
-                    Chỉ chấp nhận đuôi email trường thuộc ĐHQG-HCM để bảo đảm an toàn cộng đồng.
+                    Dùng để nhận thông báo trao đổi học liệu và đăng nhập.
                   </p>
                 </div>
 

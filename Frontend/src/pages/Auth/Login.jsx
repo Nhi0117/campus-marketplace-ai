@@ -17,18 +17,12 @@ export const LoginPage = () => {
     e.preventDefault();
     setError('');
 
-    if (!email) {
-      setError('Vui lòng nhập email ĐHQG-HCM');
+    if (!email || !email.includes('@')) {
+      setError('Vui lòng nhập địa chỉ email hợp lệ.');
       return;
     }
-
-    // Kiểm tra định dạng email ĐHQG-HCM nếu nhập không đúng domain sinh viên
-    const validDomains = ['vnuhcm.edu.vn', 'uel.edu.vn', 'uit.edu.vn', 'hcmut.edu.vn', 'hcmus.edu.vn', 'ussh.edu.vn', 'hcmiu.edu.vn'];
-    const emailDomain = email.split('@')[1]?.toLowerCase();
-    const isValidVNU = validDomains.some(d => emailDomain?.endsWith(d));
-
-    if (!isValidVNU && !email.includes('admin')) {
-      setError('Email không đúng định dạng của ĐHQG-HCM.');
+    if (!password) {
+      setError('Vui lòng nhập mật khẩu.');
       return;
     }
 

@@ -4,14 +4,24 @@ import { useAuth } from '../../context/AuthContext';
 import { ProfileSidebar } from './ProfileSidebar';
 
 export const SettingsPage = () => {
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
 
   const [fullName, setFullName] = useState(user?.name || 'Nguyễn Trần Minh Anh');
   const [phone, setPhone] = useState(user?.phone || '0901 234 567');
+  const [email, setEmail] = useState(user?.email || 'minhanh@st.uel.edu.vn');
+  const [schoolName, setSchoolName] = useState(user?.schoolName || 'Đại học Kinh tế - Luật');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
   const handleSave = (e) => {
     e.preventDefault();
+    if (updateUser) {
+      updateUser({
+        name: fullName,
+        phone,
+        email,
+        schoolName,
+      });
+    }
     setSavedSuccess(true);
     setTimeout(() => setSavedSuccess(false), 3000);
   };
@@ -129,50 +139,43 @@ export const SettingsPage = () => {
                 </p>
               </div>
 
-              {/* Email ĐHQG-HCM (Khóa) */}
+              {/* Email liên hệ */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                    Email ĐHQG-HCM
-                    <Lock className="w-3 h-3 text-slate-400" />
-                  </label>
-                  <span className="text-[11px] text-slate-400 font-medium">(Không thể đổi)</span>
-                </div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Email liên hệ <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   <input
-                    type="text"
-                    disabled
-                    value={user?.email || 'minhanh@st.uel.edu.vn'}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-500 cursor-not-allowed pr-9 font-mono"
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10 pr-9"
                   />
-                  <Lock className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
+                  <User className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
                 </div>
-                <div className="mt-2 p-2.5 rounded-lg bg-blue-50/60 border border-blue-100/60 text-[11px] text-[#1557A0]">
-                  ℹ Email trường cấp được dùng để định danh tài khoản sinh viên chính chủ và không thể thay đổi.
-                </div>
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Email dùng để nhận thông báo phản hồi từ người mua và người bán.
+                </p>
               </div>
 
-              {/* Trường Đại học (Khóa) */}
+              {/* Trường Đại học */}
               <div>
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                    Trường Đại học
-                    <Lock className="w-3 h-3 text-slate-400" />
-                  </label>
-                  <span className="text-[11px] text-slate-400 font-medium">(Không thể đổi)</span>
-                </div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Trường Đại học <span className="text-red-500">*</span>
+                </label>
                 <div className="relative">
                   <input
                     type="text"
-                    disabled
-                    value={user?.schoolName || 'Đại học Kinh tế - Luật'}
-                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm text-slate-500 cursor-not-allowed pr-9"
+                    value={schoolName}
+                    onChange={(e) => setSchoolName(e.target.value)}
+                    placeholder="ví dụ: ĐH Bách Khoa, ĐH Kinh tế - Luật..."
+                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10 pr-9"
                   />
                   <Building2 className="w-4 h-4 text-slate-400 absolute right-3 top-3" />
                 </div>
-                <div className="mt-2 p-2.5 rounded-lg bg-blue-50/60 border border-blue-100/60 text-[11px] text-[#1557A0]">
-                  ☑ Tự động liên kết theo đuôi email sinh viên @st.uel.edu.vn trực thuộc hệ thống ĐHQG-HCM.
-                </div>
+                <p className="text-[11px] text-slate-400 mt-1">
+                  Trường đại học của bạn trong hệ thống ĐHQG-HCM hoặc lân cận.
+                </p>
               </div>
 
             </div>

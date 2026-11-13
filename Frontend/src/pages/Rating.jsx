@@ -22,6 +22,20 @@ export const RatingPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Cập nhật trạng thái giao dịch sang rated trong localStorage
+    try {
+      const saved = localStorage.getItem('campus_transactions');
+      if (saved) {
+        const list = JSON.parse(saved);
+        const targetId = id || 'tx_2';
+        const updated = list.map(item => item.id === targetId ? { ...item, status: 'rated' } : item);
+        localStorage.setItem('campus_transactions', JSON.stringify(updated));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
     setSubmitted(true);
     setTimeout(() => {
       navigate('/transactions');

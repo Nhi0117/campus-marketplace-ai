@@ -35,6 +35,36 @@ export const CreateListingPage = () => {
 
   const set = (name, value) => setForm(prev => ({ ...prev, [name]: value }));
 
+  // Nếu chưa đăng nhập, hiển thị màn hình yêu cầu đăng nhập
+  if (!user) {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-16 text-center">
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-blue-50 text-[#1557A0] flex items-center justify-center shadow-sm">
+          <ShieldCheck className="w-8 h-8" />
+        </div>
+        <h1 className="text-2xl font-bold text-slate-900 mb-2">Yêu cầu đăng nhập tài khoản</h1>
+        <p className="text-sm text-slate-600 mb-8 max-w-md mx-auto leading-relaxed">
+          Để đăng tin trao đổi học liệu và thiết bị học tập trong cộng đồng sinh viên ĐHQG-HCM, bạn cần đăng nhập tài khoản trước.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+          <button
+            onClick={() => navigate('/login')}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl bg-[#1557A0] text-white text-sm font-bold hover:bg-[#10437d] transition-all shadow-sm"
+          >
+            Đăng nhập ngay
+          </button>
+          <button
+            onClick={() => navigate('/register')}
+            className="w-full sm:w-auto px-6 py-3 rounded-xl border border-slate-300 text-slate-700 text-sm font-semibold hover:bg-slate-50 transition-colors"
+          >
+            Tạo tài khoản sinh viên mới
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   const handleAIGenerate = async () => {
     setAILoading(true);
     try {

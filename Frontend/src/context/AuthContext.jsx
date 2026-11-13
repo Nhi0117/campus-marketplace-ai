@@ -1,12 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { USERS, CURRENT_USER } from '../data/users';
+import { USERS } from '../data/users';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
+  // Mặc định là null (chưa đăng nhập) khi mới vào web lần đầu
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('campus_user');
-    return saved ? JSON.parse(saved) : CURRENT_USER;
+    return saved ? JSON.parse(saved) : null;
   });
 
   const [savedProducts, setSavedProducts] = useState(() => {
@@ -36,10 +37,43 @@ export const AuthProvider = ({ children }) => {
       schoolName: 'ĐH Công nghệ Thông tin',
       rating: 5.0,
       verifiedStudent: true,
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'
+      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
+      initials: email.substring(0, 2).toUpperCase()
     };
     setUser(found);
     return found;
+  };
+
+  const register = ({ name, email, schoolName, phone }) => {
+    const newUser = {
+      id: 'user_' + Date.now(),
+      name: name || email.split('@')[0],
+      email: email,
+      schoolName: schoolName || 'Đại học Quốc gia TP.HCM',
+      phone: phone || '',
+      studentId: '24' + Math.floor(100000 + Math.random() * 900000),
+      rating: 5.0,
+      reviewCount: 0,
+      listingCount: 0,
+      positiveRate: 100,
+      joinedDate: new Date().toISOString().split('T')[0],
+      verifiedStudent: true,
+      avatar: null,
+      initials: (name ? name.split(' ').map(w => w[0]).slice(-2).join('') : email.substring(0, 2)).toUpperCase(),
+    };
+    setUser(newUser);
+    return newUser;
+  };
+
+  const updateUser = (updatedData) => {
+    setUser(prev => {
+      if (!prev) return prev;
+      const merged = { ...prev, ...updatedData };
+      if (merged.name) {
+        merged.initials = merged.name.split(' ').map(w => w[0]).slice(-2).join('').toUpperCase();
+      }
+      return merged;
+    });
   };
 
   const logout = () => {
@@ -60,6 +94,8 @@ export const AuthProvider = ({ children }) => {
     <AuthContext.Provider value={{
       user,
       login,
+      register,
+      updateUser,
       logout,
       savedProducts,
       toggleSaveProduct,

@@ -76,6 +76,29 @@ const MOCK_TRANSACTIONS = [
 
 export const TransactionsPage = () => {
   const [activeTab, setActiveTab] = useState('sell'); // 'sell' | 'buy'
+  const [transactions, setTransactions] = useState(() => {
+    const saved = localStorage.getItem('campus_transactions');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Map icon lại vì JSON không lưu hàm component
+        return parsed.map(item => {
+          const original = MOCK_TRANSACTIONS.find(m => m.id === item.id);
+          return {
+            ...item,
+            icon: original?.icon || BookOpen,
+          };
+        });
+      } catch (e) {
+        return MOCK_TRANSACTIONS;
+      }
+    }
+    localStorage.setItem('campus_transactions', JSON.stringify(MOCK_TRANSACTIONS));
+    return MOCK_TRANSACTIONS;
+  });
+
+  // Lọc theo tab Bán / Mua (cho demo hiện danh sách tương ứng)
+  const displayList = transactions;
 
   return (
     <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -117,7 +140,7 @@ export const TransactionsPage = () => {
 
       {/* Danh sách giao dịch */}
       <div className="space-y-4">
-        {MOCK_TRANSACTIONS.map((tx) => {
+        {displayList.map((tx) => {
           const Icon = tx.icon;
           return (
             <div
@@ -165,15 +188,21 @@ export const TransactionsPage = () => {
 
               {/* Bên phải: Trạng thái & Hành động */}
               <div className="flex flex-col md:items-end justify-center gap-2 shrink-0 border-t md:border-t-0 pt-3 md:pt-0">
-                <span className={`px-3 py-1 rounded-full text-xs font-semibold self-start md:self-end ${tx.statusBadge}`}>
-                  {tx.statusText}
+                <span className={`px-3 py-1 rounded-full text-xs font-semibold self-start md:self-end ${
+                  tx.status === 'trading' ? 'bg-blue-50 text-[#1557A0] border border-blue-200' :
+                  tx.status === 'completed' || tx.status === 'rated' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' :
+                  'bg-red-50 text-red-600 border border-red-200'
+                }`}>
+                  {tx.status === 'trading' ? 'Đang trao đổi' :
+                   tx.status === 'completed' ? 'Đã hoàn tất' :
+                   tx.status === 'rated' ? 'Đã hoàn tất' : 'Đã hủy'}
                 </span>
 
                 {/* Nút hành động tuỳ trạng thái */}
                 {tx.status === 'trading' && (
                   <div className="flex flex-col items-end gap-1 mt-1">
                     <Link
-                      to="/verify-transaction/tx_1"
+                      to={`/verify-transaction/${tx.id}`}
                       className="px-5 py-2 rounded-xl bg-[#1557A0] hover:bg-[#10437d] text-white text-xs font-bold transition-all shadow-sm"
                     >
                       Xác nhận hoàn tất
@@ -191,7 +220,7 @@ export const TransactionsPage = () => {
                 {tx.status === 'completed' && (
                   <div className="mt-1">
                     <Link
-                      to="/rating/tx_2"
+                      to={`/rating/${tx.id}`}
                       className="px-5 py-2 rounded-xl border border-slate-300 hover:border-[#1557A0] hover:bg-blue-50 text-[#1557A0] text-xs font-bold transition-all"
                     >
                       Đánh giá người bán
@@ -208,7 +237,7 @@ export const TransactionsPage = () => {
                 {tx.status === 'rated' && (
                   <div className="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-600 mt-1">
                     <CheckCircle2 className="w-4 h-4" />
-                    <span>Bạn đã đánh giá</span>
+                    <span>✓ Bạn đã đánh giá</span>
                   </div>
                 )}
               </div>

@@ -23,15 +23,10 @@ export const AdminSidebar = ({ activeTab = 'listings' }) => {
     <aside className="w-64 bg-white border-r border-slate-200 min-h-[calc(100vh-64px)] flex flex-col justify-between shrink-0">
       <div className="p-4 space-y-6">
         {/* Logo Admin */}
-        <div className="flex items-center gap-2.5 px-2">
-          <div className="w-8 h-8 rounded-xl bg-[#1557A0] flex items-center justify-center text-white shadow-sm">
-            <GraduationCap className="w-5 h-5" />
-          </div>
-          <div>
-            <span className="font-bold text-sm text-slate-900 block leading-none">CampusMarket</span>
-            <span className="text-[10px] text-slate-400 font-medium">Khu vực Admin</span>
-          </div>
-        </div>
+        <Link to="/" className="block px-2">
+          <img src="/logo.svg" alt="Campus Marketplace" className="h-9 w-auto object-contain mb-1" />
+          <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">Khu vực Quản Trị ĐHQG</span>
+        </Link>
 
         {/* Navigation list */}
         <nav className="space-y-1">

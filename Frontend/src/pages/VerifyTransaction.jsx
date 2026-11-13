@@ -13,6 +13,20 @@ export const VerifyTransactionPage = () => {
   const handleComplete = (e) => {
     e.preventDefault();
     if (!confirmed) return;
+
+    // Cập nhật trạng thái giao dịch sang completed trong localStorage
+    try {
+      const saved = localStorage.getItem('campus_transactions');
+      if (saved) {
+        const list = JSON.parse(saved);
+        const targetId = id || 'tx_1';
+        const updated = list.map(item => item.id === targetId ? { ...item, status: 'completed' } : item);
+        localStorage.setItem('campus_transactions', JSON.stringify(updated));
+      }
+    } catch (err) {
+      console.error(err);
+    }
+
     setSuccess(true);
     setTimeout(() => {
       navigate('/transactions');
