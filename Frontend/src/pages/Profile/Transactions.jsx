@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, Laptop, FileText, Palette, CheckCircle2, MessageSquare, ArrowRight } from 'lucide-react';
 import { formatCurrency } from '../../utils/format';
+import { ProfileSidebar } from './ProfileSidebar';
 
 const MOCK_TRANSACTIONS = [
   {
@@ -101,12 +102,32 @@ export const TransactionsPage = () => {
   const displayList = transactions;
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900">Lịch sử giao dịch</h1>
-        <p className="text-xs text-slate-500 mt-1">Theo dõi các giao dịch của bạn.</p>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-xs text-slate-500 mb-6">
+        <Link to="/" className="hover:text-slate-800">Trang chủ</Link>
+        <span>›</span>
+        <span>Quản lý tài khoản</span>
+        <span>›</span>
+        <span className="font-semibold text-slate-800">Lịch sử giao dịch</span>
       </div>
+
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        {/* Sidebar */}
+        <ProfileSidebar activeTab="transactions" />
+
+        {/* Nội dung chính */}
+        <div className="flex-1 w-full bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm">
+          {/* Header */}
+          <div className="flex items-center justify-between pb-6 border-b border-slate-100 mb-6">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">Lịch sử giao dịch</h1>
+              <p className="text-xs text-slate-500 mt-1">Theo dõi các giao dịch của bạn.</p>
+            </div>
+            <span className="px-3 py-1 rounded-full bg-[#EBF4FF] text-[#1557A0] text-xs font-bold">
+              {displayList.length} giao dịch
+            </span>
+          </div>
 
       {/* Toggle Bán / Mua */}
       <div className="flex items-center justify-between mb-6 pb-2">
@@ -244,6 +265,8 @@ export const TransactionsPage = () => {
             </div>
           );
         })}
+          </div>
+        </div>
       </div>
     </div>
   );

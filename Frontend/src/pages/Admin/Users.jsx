@@ -77,22 +77,46 @@ const MOCK_USERS = [
 ];
 
 export const AdminUsersPage = () => {
-  const [users, setUsers] = useState(MOCK_USERS);
+  const [users, setUsers] = useState(() => {
+    const saved = localStorage.getItem('campus_users_list');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // Map lại trường school nếu trường đó lưu là schoolName
+        return parsed.map((item, index) => ({
+          ...item,
+          id: item.id || (index + 1),
+          school: item.school || item.schoolName || 'Đại học Quốc gia TP.HCM',
+          mssv: item.studentId || item.mssv || '2154010834',
+          status: item.status || 'active',
+          statusText: item.statusText || (item.status === 'locked' ? 'Bị khóa' : 'Hoạt động'),
+        }));
+      } catch (e) {
+        return MOCK_USERS;
+      }
+    }
+    return MOCK_USERS;
+  });
+
   const [searchTerm, setSearchTerm] = useState('');
   const [filterTab, setFilterTab] = useState('all'); // all | active | locked
 
   const toggleLock = (userId) => {
-    setUsers(prev => prev.map(u => {
-      if (u.id === userId) {
-        const nextStatus = u.status === 'active' ? 'locked' : 'active';
-        return {
-          ...u,
-          status: nextStatus,
-          statusText: nextStatus === 'active' ? 'Hoạt động' : 'Bị khóa',
-        };
-      }
-      return u;
-    }));
+    setUsers(prev => {
+      const updated = prev.map(u => {
+        if (u.id === userId) {
+          const nextStatus = u.status === 'active' ? 'locked' : 'active';
+          return {
+            ...u,
+            status: nextStatus,
+            statusText: nextStatus === 'active' ? 'Hoạt động' : 'Bị khóa',
+          };
+        }
+        return u;
+      });
+      localStorage.setItem('campus_users_list', JSON.stringify(updated));
+      return updated;
+    });
   };
 
   const filtered = users.filter(u => {

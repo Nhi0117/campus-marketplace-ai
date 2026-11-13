@@ -10,7 +10,23 @@ export const SettingsPage = () => {
   const [phone, setPhone] = useState(user?.phone || '0901 234 567');
   const [email, setEmail] = useState(user?.email || 'minhanh@st.uel.edu.vn');
   const [schoolName, setSchoolName] = useState(user?.schoolName || 'Đại học Kinh tế - Luật');
+  const [avatar, setAvatar] = useState(user?.avatar || null);
   const [savedSuccess, setSavedSuccess] = useState(false);
+
+  const handleAvatarChange = (e) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setAvatar(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveAvatar = () => {
+    setAvatar(null);
+  };
 
   const handleSave = (e) => {
     e.preventDefault();
@@ -20,6 +36,7 @@ export const SettingsPage = () => {
         phone,
         email,
         schoolName,
+        avatar,
       });
     }
     setSavedSuccess(true);
@@ -60,39 +77,51 @@ export const SettingsPage = () => {
           {/* Khối Avatar */}
           <div className="mb-8 p-6 rounded-2xl bg-slate-50 border border-slate-100 flex flex-col sm:flex-row items-center gap-6">
             <div className="relative">
-              <div className="w-24 h-24 rounded-full bg-blue-100 border-2 border-white shadow-sm flex items-center justify-center overflow-hidden">
-                {user?.avatar ? (
-                  <img src={user.avatar} alt="Avatar" className="w-full h-full object-cover" />
+              <div className="w-24 h-24 rounded-full bg-slate-100 border-2 border-slate-200 shadow-inner flex items-center justify-center overflow-hidden">
+                {avatar ? (
+                  <img src={avatar} alt="Avatar" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-2xl font-bold text-[#1557A0]">MA</span>
+                  <span className="text-2xl font-extrabold text-[#1557A0]">
+                    {user?.initials || fullName.substring(0, 2).toUpperCase()}
+                  </span>
                 )}
               </div>
-              <button
-                type="button"
-                className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#1557A0] text-white flex items-center justify-center shadow hover:bg-[#10437d] transition-colors"
-                title="Đổi ảnh đại diện"
+              <label
+                htmlFor="avatar-upload"
+                className="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-[#1557A0] text-white flex items-center justify-center shadow hover:bg-[#10437d] transition-colors cursor-pointer"
+                title="Tải ảnh đại diện từ máy"
               >
                 <Camera className="w-4 h-4" />
-              </button>
+                <input
+                  id="avatar-upload"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleAvatarChange}
+                  className="hidden"
+                />
+              </label>
             </div>
 
             <div className="space-y-2 text-center sm:text-left">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
-                <button
-                  type="button"
-                  className="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:border-[#1557A0] text-xs font-semibold text-slate-700 transition-colors"
+                <label
+                  htmlFor="avatar-upload"
+                  className="px-4 py-2 rounded-xl bg-white border border-slate-300 hover:border-[#1557A0] text-xs font-semibold text-slate-700 transition-colors cursor-pointer"
                 >
                   Thay đổi ảnh đại diện
-                </button>
-                <button
-                  type="button"
-                  className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-red-600 transition-colors"
-                >
-                  Xóa ảnh
-                </button>
+                </label>
+                {avatar && (
+                  <button
+                    type="button"
+                    onClick={handleRemoveAvatar}
+                    className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:text-red-600 transition-colors"
+                  >
+                    Xóa ảnh
+                  </button>
+                )}
               </div>
               <p className="text-[11px] text-slate-400 max-w-md">
-                Định dạng cho phép: JPG, PNG. Dung lượng tối đa: 5MB. Khuyến nghị ảnh thẻ hoặc chân dung sinh viên rõ mặt để tạo độ tin cậy trong trao đổi.
+                Mặc định hệ thống hiển thị tên viết tắt. Bạn có thể tự chọn ảnh từ máy tính (JPG, PNG tối đa 5MB) để tăng tính tin cậy khi trao đổi.
               </p>
             </div>
           </div>

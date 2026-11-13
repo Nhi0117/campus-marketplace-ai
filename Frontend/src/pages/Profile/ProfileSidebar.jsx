@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, ListFilter, Bookmark, MessageSquare, History, Sparkles, Shield, LogOut } from 'lucide-react';
+import { User, ListFilter, Bookmark, MessageSquare, History, Shield, LogOut } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const ProfileSidebar = ({ activeTab = 'settings' }) => {
@@ -20,28 +20,41 @@ export const ProfileSidebar = ({ activeTab = 'settings' }) => {
     navigate('/');
   };
 
+  // Tạo tên viết tắt (Initials) - Mặc định chỉ hiển thị tên viết tắt, không để avatar người mẫu
+  const displayName = user?.name || 'Sinh viên ĐHQG';
+  const displaySchool = user?.schoolName || 'Đại học Quốc gia TP.HCM';
+  const initials = user?.initials || displayName.split(' ').map(w => w[0]).slice(-2).join('').toUpperCase();
+
   return (
-    <aside className="w-full lg:w-64 shrink-0 space-y-6">
-      {/* Box user info mini */}
-      <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm text-center">
-        <div className="w-20 h-20 mx-auto rounded-full bg-slate-100 border-2 border-[#1557A0]/20 flex items-center justify-center overflow-hidden mb-3">
+    <aside className="w-full lg:w-72 shrink-0 space-y-4 font-['Plus_Jakarta_Sans',sans-serif]">
+      {/* KHỐI 1: Thông tin người dùng (Khớp đúng ảnh người dùng gửi) */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs text-center space-y-3">
+        {/* Vòng tròn hiển thị chữ viết tắt, bỏ ảnh mẫu */}
+        <div className="w-24 h-24 mx-auto rounded-full bg-slate-100 border-2 border-slate-200 flex items-center justify-center overflow-hidden shadow-inner">
           {user?.avatar ? (
-            <img src={user.avatar} alt={user.name} className="w-full h-full object-cover" />
+            <img src={user.avatar} alt={displayName} className="w-full h-full object-cover" />
           ) : (
-            <span className="text-xl font-bold text-[#1557A0]">{user?.initials || 'SV'}</span>
+            <span className="text-2xl font-extrabold text-[#1557A0] tracking-wider">
+              {initials}
+            </span>
           )}
         </div>
-        <h3 className="font-bold text-base text-slate-900">{user?.name || 'Sinh viên ĐHQG'}</h3>
-        <p className="text-xs text-slate-500 mt-0.5">{user?.schoolName || 'Đại học Quốc gia TP.HCM'}</p>
 
-        <div className="mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-semibold text-[#1557A0] bg-[#EBF4FF]">
-          <Shield className="w-3 h-3 text-[#1557A0]" />
-          Đã xác thực email sinh viên ĐHQG
+        <div>
+          <h3 className="font-bold text-lg text-slate-900 tracking-tight">{displayName}</h3>
+          <p className="text-xs text-slate-500 mt-0.5">{displaySchool}</p>
+        </div>
+
+        <div className="pt-1">
+          <div className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-semibold text-[#1557A0] bg-[#EBF4FF] border border-blue-100">
+            <Shield className="w-3.5 h-3.5 text-[#1557A0] shrink-0" />
+            <span>Đã xác thực email sinh viên ĐHQG</span>
+          </div>
         </div>
       </div>
 
-      {/* Navigation menu */}
-      <div className="bg-white border border-slate-200/80 rounded-2xl p-2 shadow-sm">
+      {/* KHỐI 2: Menu Quản lý tài khoản (Khớp đúng ảnh người dùng gửi) */}
+      <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs">
         <div className="px-3 py-2 text-[11px] font-bold tracking-wider text-slate-400 uppercase">
           Quản lý tài khoản
         </div>
@@ -54,14 +67,14 @@ export const ProfileSidebar = ({ activeTab = 'settings' }) => {
               <Link
                 key={item.id}
                 to={item.path}
-                className={`flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold transition-all ${
+                className={`flex items-center justify-between px-3.5 py-3 rounded-xl text-xs font-semibold transition-all ${
                   isActive
-                    ? 'bg-[#EBF4FF] text-[#1557A0] border-l-4 border-[#1557A0]'
+                    ? 'bg-[#EBF4FF] text-[#1557A0] font-bold border-l-4 border-[#1557A0]'
                     : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                 }`}
               >
                 <div className="flex items-center gap-3">
-                  <Icon className="w-4 h-4" />
+                  <Icon className="w-4 h-4 shrink-0" />
                   <span>{item.label}</span>
                 </div>
                 {item.badge && (
@@ -75,31 +88,12 @@ export const ProfileSidebar = ({ activeTab = 'settings' }) => {
 
           <button
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors mt-2 text-left"
+            className="w-full flex items-center gap-3 px-3.5 py-3 rounded-xl text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors mt-2 text-left"
           >
-            <LogOut className="w-4 h-4" />
+            <LogOut className="w-4 h-4 shrink-0" />
             <span>Đăng xuất</span>
           </button>
         </nav>
-      </div>
-
-      {/* Info card sinh viên */}
-      <div className="p-4 rounded-2xl bg-[#EBF4FF]/60 border border-blue-100 text-xs space-y-2">
-        <div className="flex items-center gap-2 font-bold text-slate-800">
-          <Shield className="w-4 h-4 text-[#1557A0]" />
-          <span>Sinh viên ĐHQG</span>
-        </div>
-        <p className="text-slate-600 text-[11px] leading-relaxed">
-          Tài khoản sinh viên đã xác thực SSO ĐHQG-HCM.
-        </p>
-      </div>
-
-      {/* Hỗ trợ */}
-      <div className="p-4 rounded-2xl bg-white border border-slate-200/80 text-xs space-y-1.5">
-        <div className="font-semibold text-slate-800">Cần hỗ trợ hồ sơ?</div>
-        <p className="text-[11px] text-slate-500 leading-relaxed">
-          Liên hệ phòng hỗ trợ sinh viên ĐHQG nếu phát hiện sai lệch dữ liệu học vụ.
-        </p>
       </div>
     </aside>
   );

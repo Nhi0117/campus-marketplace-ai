@@ -4,15 +4,32 @@ import { USERS } from '../data/users';
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  // Mặc định là null (chưa đăng nhập) khi mới vào web lần đầu
+  // 1. Quản lý danh sách toàn bộ người dùng trong hệ thống (lưu localStorage để Admin quản lý)
+  const [usersList, setUsersList] = useState(() => {
+    const saved = localStorage.getItem('campus_users_list');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        return USERS;
+      }
+    }
+    // Mặc định lưu danh sách người dùng ban đầu nhưng bỏ ảnh mẫu sẵn có (avatar: null)
+    const initialUsers = USERS.map(u => ({ ...u, avatar: null }));
+    localStorage.setItem('campus_users_list', JSON.stringify(initialUsers));
+    return initialUsers;
+  });
+
+  // 2. Tài khoản đang đăng nhập trong phiên hiện tại (mặc định null khi vào web lần đầu)
   const [user, setUser] = useState(() => {
     const saved = localStorage.getItem('campus_user');
     return saved ? JSON.parse(saved) : null;
   });
 
+  // 3. Danh sách sản phẩm đã lưu (thả tim)
   const [savedProducts, setSavedProducts] = useState(() => {
     const saved = localStorage.getItem('campus_saved_products');
-    return saved ? JSON.parse(saved) : ['prod_1', 'prod_3'];
+    return saved ? JSON.parse(saved) : ['prod_1', 'prod_2'];
   });
 
   useEffect(() => {
@@ -24,31 +41,55 @@ export const AuthProvider = ({ children }) => {
   }, [user]);
 
   useEffect(() => {
+    localStorage.setItem('campus_users_list', JSON.stringify(usersList));
+  }, [usersList]);
+
+  useEffect(() => {
     localStorage.setItem('campus_saved_products', JSON.stringify(savedProducts));
   }, [savedProducts]);
 
+  // Đăng nhập: kiểm tra xem tài khoản đã có trong danh sách chưa
   const login = (email, password) => {
-    const found = USERS.find(u => u.email.toLowerCase() === email.toLowerCase()) || {
-      id: 'user_' + Date.now(),
-      name: email.split('@')[0],
-      email: email,
-      studentId: '2352' + Math.floor(1000 + Math.random() * 9000),
-      schoolId: 'UIT',
-      schoolName: 'ĐH Công nghệ Thông tin',
-      rating: 5.0,
-      verifiedStudent: true,
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-      initials: email.substring(0, 2).toUpperCase()
-    };
+    const normalizedEmail = email.trim().toLowerCase();
+    const found = usersList.find(u => u.email.toLowerCase() === normalizedEmail);
+
+    if (!found) {
+      // Chưa có dữ liệu -> Báo lỗi để chuyển sang trang Đăng ký
+      return {
+        success: false,
+        error: 'USER_NOT_FOUND',
+        message: 'Tài khoản chưa tồn tại trong hệ thống. Vui lòng đăng ký tài khoản mới!'
+      };
+    }
+
     setUser(found);
-    return found;
+    return { success: true, user: found };
   };
 
+  // Đăng ký tài khoản mới: ghi dữ liệu vào usersList
   const register = ({ name, email, schoolName, phone }) => {
+    const normalizedEmail = email.trim().toLowerCase();
+    const existing = usersList.find(u => u.email.toLowerCase() === normalizedEmail);
+
+    if (existing) {
+      return {
+        success: false,
+        error: 'EMAIL_EXISTS',
+        message: 'Email này đã tồn tại trong hệ thống. Vui lòng đăng nhập!'
+      };
+    }
+
+    const cleanName = name.trim();
+    // Tạo 2 chữ cái viết tắt (Initials) từ tên
+    const nameWords = cleanName.split(' ').filter(Boolean);
+    const initials = nameWords.length > 1
+      ? (nameWords[0][0] + nameWords[nameWords.length - 1][0]).toUpperCase()
+      : cleanName.substring(0, 2).toUpperCase();
+
     const newUser = {
       id: 'user_' + Date.now(),
-      name: name || email.split('@')[0],
-      email: email,
+      name: cleanName,
+      email: normalizedEmail,
       schoolName: schoolName || 'Đại học Quốc gia TP.HCM',
       phone: phone || '',
       studentId: '24' + Math.floor(100000 + Math.random() * 900000),
@@ -58,20 +99,32 @@ export const AuthProvider = ({ children }) => {
       positiveRate: 100,
       joinedDate: new Date().toISOString().split('T')[0],
       verifiedStudent: true,
-      avatar: null,
-      initials: (name ? name.split(' ').map(w => w[0]).slice(-2).join('') : email.substring(0, 2)).toUpperCase(),
+      avatar: null, // Không dùng ảnh người mẫu có sẵn, chỉ hiển thị tên viết tắt
+      initials: initials,
+      status: 'active',
+      statusText: 'Hoạt động',
     };
+
+    setUsersList(prev => [newUser, ...prev]);
     setUser(newUser);
-    return newUser;
+
+    return { success: true, user: newUser };
   };
 
+  // Cập nhật thông tin hồ sơ
   const updateUser = (updatedData) => {
     setUser(prev => {
       if (!prev) return prev;
       const merged = { ...prev, ...updatedData };
       if (merged.name) {
-        merged.initials = merged.name.split(' ').map(w => w[0]).slice(-2).join('').toUpperCase();
+        const words = merged.name.trim().split(' ').filter(Boolean);
+        merged.initials = words.length > 1
+          ? (words[0][0] + words[words.length - 1][0]).toUpperCase()
+          : merged.name.substring(0, 2).toUpperCase();
       }
+
+      // Cập nhật lại trong usersList
+      setUsersList(list => list.map(u => u.id === prev.id ? merged : u));
       return merged;
     });
   };
@@ -93,6 +146,8 @@ export const AuthProvider = ({ children }) => {
   return (
     <AuthContext.Provider value={{
       user,
+      usersList,
+      setUsersList,
       login,
       register,
       updateUser,

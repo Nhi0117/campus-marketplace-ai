@@ -1,6 +1,7 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import { Layout } from '../components/layout/Layout';
+import { AdminLayout } from '../components/layout/AdminLayout';
 
 // Public & Main Pages
 import { HomePage } from '../pages/Home';
@@ -65,14 +66,16 @@ export const AppRoutes = () => {
         <Route path="report/:id" element={<ReportPage />} />
         <Route path="verify-transaction/:id" element={<VerifyTransactionPage />} />
 
-        {/* Khu vực Admin */}
-        <Route path="admin" element={<AdminPage />} />
-        <Route path="admin/reports" element={<AdminReportsPage />} />
-        <Route path="admin/reports/:id" element={<AdminReportDetailPage />} />
-        <Route path="admin/users" element={<AdminUsersPage />} />
-
         {/* 404 */}
         <Route path="*" element={<NotFoundPage />} />
+      </Route>
+
+      {/* Khu vực Quản trị Admin riêng biệt (Không dùng chung Layout public của user) */}
+      <Route path="/admin" element={<AdminLayout />}>
+        <Route index element={<AdminPage />} />
+        <Route path="reports" element={<AdminReportsPage />} />
+        <Route path="reports/:id" element={<AdminReportDetailPage />} />
+        <Route path="users" element={<AdminUsersPage />} />
       </Route>
     </Routes>
   );

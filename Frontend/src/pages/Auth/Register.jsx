@@ -1,15 +1,21 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Eye, EyeOff, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Eye, EyeOff, ShieldCheck, Sparkles, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 export const RegisterPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { register } = useAuth();
 
+  // Nhận email truyền từ trang Login sang (nếu có)
+  const searchParams = new URLSearchParams(location.search);
+  const initialEmail = searchParams.get('email') || '';
+
   const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(initialEmail);
   const [schoolName, setSchoolName] = useState('Đại học Bách Khoa');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -17,16 +23,22 @@ export const RegisterPage = () => {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
+  useEffect(() => {
+    if (initialEmail) {
+      setEmail(initialEmail);
+    }
+  }, [initialEmail]);
+
   const handleSubmit = (e) => {
     e.preventDefault();
     setError('');
 
     if (!fullName.trim()) {
-      setError('Vui lòng nhập họ và tên.');
+      setError('Vui lòng nhập họ và tên của bạn.');
       return;
     }
     if (!email || !email.includes('@')) {
-      setError('Vui lòng nhập email hợp lệ.');
+      setError('Vui lòng nhập địa chỉ email hợp lệ.');
       return;
     }
     if (password.length < 6) {
@@ -40,9 +52,20 @@ export const RegisterPage = () => {
 
     setLoading(true);
     setTimeout(() => {
-      register({ name: fullName, email, schoolName });
+      const res = register({
+        name: fullName,
+        email,
+        schoolName,
+        phone,
+      });
+
       setLoading(false);
-      navigate('/');
+
+      if (!res.success) {
+        setError(res.message);
+      } else {
+        navigate('/settings');
+      }
     }, 400);
   };
 
@@ -74,7 +97,7 @@ export const RegisterPage = () => {
               <div className="space-y-1">
                 <h3 className="text-sm font-bold text-slate-800">Xác thực tài khoản sinh viên chính chủ</h3>
                 <p className="text-xs text-slate-600 leading-relaxed">
-                  Xác thực thông qua email sinh viên do các trường thành viên ĐHQG-HCM cấp, loại bỏ hoàn toàn tài khoản ảo, ngăn ngừa lừa đảo và đảm bảo an toàn giao dịch tối đa.
+                  Đăng ký tài khoản để quản lý tin đăng, lưu học liệu quan tâm và trao đổi trực tiếp với sinh viên cùng trường.
                 </p>
               </div>
             </div>
@@ -141,13 +164,13 @@ export const RegisterPage = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Họ và tên
+                    Họ và tên <span className="text-red-500">*</span>
                   </label>
                   <input
                     type="text"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="Nhập họ tên của bạn"
+                    placeholder="ví dụ: Nguyễn Trần Bích Nhi"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10"
                   />
                 </div>
@@ -180,24 +203,24 @@ export const RegisterPage = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="ví dụ: nguyenvana@gmail.com hoặc email trường"
+                    placeholder="ví dụ: bプレイnhi@uel.edu.vn hoặc gmail"
                     className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10"
                   />
                   <p className="text-[11px] text-slate-400 mt-1">
-                    Dùng để nhận thông báo trao đổi học liệu và đăng nhập.
+                    Dùng để đăng nhập và trao đổi học liệu với sinh viên khác.
                   </p>
                 </div>
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Mật khẩu
+                    Mật khẩu <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input
                       type={showPassword ? 'text' : 'password'}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      placeholder="Tối thiểu 8 ký tự"
+                      placeholder="Tối thiểu 6 ký tự"
                       className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10 pr-10"
                     />
                     <button
@@ -212,7 +235,7 @@ export const RegisterPage = () => {
 
                 <div>
                   <label className="block text-xs font-semibold text-slate-700 mb-1.5">
-                    Xác nhận mật khẩu
+                    Xác nhận mật khẩu <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
                     <input
@@ -241,7 +264,7 @@ export const RegisterPage = () => {
                 </button>
 
                 <p className="text-[11px] text-slate-400 text-center mt-3 leading-relaxed">
-                  Bằng việc đăng ký, bạn đồng ý với Quy chế hoạt động của Campus Marketplace.
+                  Bằng việc đăng ký, bạn đồng ý với Quy chế hoạt động của Campus Marketplace AI.
                 </p>
               </form>
 

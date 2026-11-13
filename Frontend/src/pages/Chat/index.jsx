@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Send, Info, BookOpen, AlertCircle, Check } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { formatCurrency } from '../../utils/format';
+import { ProfileSidebar } from '../Profile/ProfileSidebar';
 
 const MOCK_CONVERSATIONS = [
   {
@@ -114,16 +115,21 @@ export const ChatPage = () => {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Page Header */}
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold text-slate-900">Hộp thư & trao đổi</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Trao đổi với người mua và người bán về từng tin đăng.
-        </p>
+      {/* Breadcrumb */}
+      <div className="flex items-center gap-2 text-xs text-slate-500 mb-6">
+        <Link to="/" className="hover:text-slate-800">Trang chủ</Link>
+        <span>›</span>
+        <span>Quản lý tài khoản</span>
+        <span>›</span>
+        <span className="font-semibold text-slate-800">Hộp thư & Trao đổi</span>
       </div>
 
-      {/* Chat Container */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[620px]">
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        {/* Sidebar */}
+        <ProfileSidebar activeTab="chat" />
+
+        {/* Chat Container */}
+        <div className="flex-1 w-full bg-white border border-slate-200/90 rounded-2xl shadow-sm overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[620px]">
         
         {/* CỘT TRÁI: Danh sách cuộc trò chuyện */}
         <div className="md:col-span-5 lg:col-span-4 border-r border-slate-100 flex flex-col">
@@ -280,5 +286,6 @@ export const ChatPage = () => {
 
       </div>
     </div>
+  </div>
   );
 };

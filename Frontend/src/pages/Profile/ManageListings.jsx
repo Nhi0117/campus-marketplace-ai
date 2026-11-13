@@ -5,6 +5,7 @@ import { useProducts } from '../../hooks/useProducts';
 import { formatCurrency, formatTimeAgo } from '../../utils/format';
 import { ShieldCheck, Star, Edit, Eye, EyeOff, Trash2, RefreshCw, Sparkles } from 'lucide-react';
 import { Button } from '../../components/common/Button';
+import { ProfileSidebar } from './ProfileSidebar';
 
 const STATUS_MAP = {
   active:    { label: 'Đang hiển thị',         cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
@@ -39,58 +40,33 @@ export const ManageListingsPage = () => {
   const tabCount = (id) => id === 'all' ? myProducts.length : myProducts.filter(p => p.status === id).length;
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Breadcrumb */}
-      <nav className="text-xs text-slate-400 mb-4 flex gap-1">
-        <a href="/" className="hover:text-[#1557A0]">Trang chủ</a><span>/</span>
-        <a href="/profile" className="hover:text-[#1557A0]">Bảng điều khiển cá nhân</a><span>/</span>
-        <span className="text-slate-800">Quản lý tin của tôi</span>
-      </nav>
+      <div className="flex items-center gap-2 text-xs text-slate-500 mb-6">
+        <Link to="/" className="hover:text-slate-800">Trang chủ</Link>
+        <span>›</span>
+        <span>Quản lý tài khoản</span>
+        <span>›</span>
+        <span className="font-semibold text-slate-800">Tin đăng của tôi</span>
+      </div>
 
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* ── Sidebar ── */}
-        <aside className="md:w-56 shrink-0">
-          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
-            <div className="p-4 border-b border-slate-100 flex items-center gap-3">
-              {user?.avatar ? (
-                <img src={user.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
-              ) : (
-                <div className="w-10 h-10 rounded-full bg-[#1557A0] text-white font-black flex items-center justify-center text-sm">{user?.initials || 'SV'}</div>
-              )}
-              <div className="min-w-0">
-                <p className="text-sm font-bold text-slate-800 truncate">{user?.name}</p>
-                <p className="text-[11px] text-slate-500 truncate">{user?.schoolName}</p>
-              </div>
-            </div>
-            <nav className="py-2">
-              {[
-                { label: 'Hồ sơ cá nhân',      path: '/profile',          icon: '👤' },
-                { label: 'Quản lý tin của tôi', path: '/manage-listings',  icon: '📋', active: true },
-                { label: 'Tin đã lưu',          path: '/saved',            icon: '❤️' },
-                { label: 'Lịch sử giao dịch',   path: '/transactions',     icon: '🕐' },
-                { label: 'Cài đặt tài khoản',   path: '/settings',         icon: '⚙️' },
-              ].map(item => (
-                <Link key={item.label} to={item.path}
-                  className={`flex items-center gap-2.5 px-4 py-2.5 text-sm transition ${
-                    item.active ? 'bg-blue-50 text-[#1557A0] font-bold border-l-4 border-[#1557A0]' : 'text-slate-600 hover:bg-slate-50'
-                  }`}>
-                  <span>{item.icon}</span>{item.label}
-                </Link>
-              ))}
-              <div className="border-t border-slate-100 mt-2 pt-2">
-                <button className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 w-full transition">
-                  <span>🚪</span>Đăng xuất
-                </button>
-              </div>
-            </nav>
-          </div>
-        </aside>
+      <div className="flex flex-col lg:flex-row gap-8 items-start">
+        {/* Sidebar */}
+        <ProfileSidebar activeTab="manage-listings" />
 
         {/* ── Main ── */}
-        <div className="flex-1 min-w-0 space-y-5">
-          <div>
-            <h1 className="text-2xl font-black text-slate-900">Quản lý tin của tôi</h1>
-            <p className="text-xs text-slate-500 mt-0.5">Theo dõi trạng thái duyệt tin, quản lý tin đang bán, tặng, trao đổi học liệu trong hệ thống ĐHQG-HCM.</p>
+        <div className="flex-1 w-full bg-white border border-slate-200/80 rounded-2xl p-6 sm:p-8 shadow-sm space-y-6">
+          <div className="flex items-center justify-between pb-6 border-b border-slate-100">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-900">Tin đăng của tôi</h1>
+              <p className="text-xs text-slate-500 mt-1">Theo dõi trạng thái duyệt tin, quản lý tin đang bán, tặng, trao đổi học liệu trong hệ thống ĐHQG-HCM.</p>
+            </div>
+            <Link
+              to="/create-listing"
+              className="px-4 py-2 rounded-xl bg-[#1557A0] hover:bg-[#10437d] text-white text-xs font-bold transition-all shadow-sm"
+            >
+              + Đăng tin mới
+            </Link>
           </div>
 
           {/* Tabs */}
