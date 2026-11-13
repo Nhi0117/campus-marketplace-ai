@@ -1,0 +1,254 @@
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+import { useProducts } from '../../hooks/useProducts';
+import { formatCurrency, formatTimeAgo } from '../../utils/format';
+import { ShieldCheck, Star, Edit, Eye, EyeOff, Trash2, RefreshCw, Sparkles } from 'lucide-react';
+import { Button } from '../../components/common/Button';
+
+const STATUS_MAP = {
+  active:    { label: 'Đang hiển thị',         cls: 'bg-emerald-100 text-emerald-700 border-emerald-200' },
+  pending:   { label: 'Chờ duyệt',             cls: 'bg-amber-100 text-amber-700 border-amber-200' },
+  need_edit: { label: 'Cần chỉnh sửa',         cls: 'bg-orange-100 text-orange-700 border-orange-200' },
+  rejected:  { label: 'Bị từ chối',            cls: 'bg-red-100 text-red-700 border-red-200' },
+  hidden:    { label: 'Đã ẩn',                 cls: 'bg-slate-100 text-slate-600 border-slate-200' },
+  done:      { label: 'Đã hoàn tất / Giao dịch', cls: 'bg-blue-100 text-blue-700 border-blue-200' },
+  deleted:   { label: 'Đã xóa',               cls: 'bg-slate-100 text-slate-500 border-slate-200' },
+};
+
+const TABS = [
+  { id: 'all',       label: 'Tất cả' },
+  { id: 'active',    label: 'Đang hiển thị' },
+  { id: 'pending',   label: 'Chờ duyệt' },
+  { id: 'need_edit', label: 'Cần chỉnh sửa' },
+  { id: 'rejected',  label: 'Bị từ chối' },
+  { id: 'hidden',    label: 'Đã ẩn' },
+  { id: 'done',      label: 'Đã hoàn tất / Giao dịch' },
+  { id: 'deleted',   label: 'Đã xóa' },
+];
+
+export const ManageListingsPage = () => {
+  const { user } = useAuth();
+  const { products } = useProducts();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('all');
+
+  const myProducts = products.filter(p => p.seller?.id === user?.id || p.seller?.name === user?.shortName || p.seller?.name === user?.name);
+  const filtered   = activeTab === 'all' ? myProducts : myProducts.filter(p => p.status === activeTab);
+
+  const tabCount = (id) => id === 'all' ? myProducts.length : myProducts.filter(p => p.status === id).length;
+
+  return (
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      {/* Breadcrumb */}
+      <nav className="text-xs text-slate-400 mb-4 flex gap-1">
+        <a href="/" className="hover:text-[#1557A0]">Trang chủ</a><span>/</span>
+        <a href="/profile" className="hover:text-[#1557A0]">Bảng điều khiển cá nhân</a><span>/</span>
+        <span className="text-slate-800">Quản lý tin của tôi</span>
+      </nav>
+
+      <div className="flex flex-col md:flex-row gap-6">
+        {/* ── Sidebar ── */}
+        <aside className="md:w-56 shrink-0">
+          <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+            <div className="p-4 border-b border-slate-100 flex items-center gap-3">
+              {user?.avatar ? (
+                <img src={user.avatar} alt="" className="w-10 h-10 rounded-full object-cover" />
+              ) : (
+                <div className="w-10 h-10 rounded-full bg-[#1557A0] text-white font-black flex items-center justify-center text-sm">{user?.initials || 'SV'}</div>
+              )}
+              <div className="min-w-0">
+                <p className="text-sm font-bold text-slate-800 truncate">{user?.name}</p>
+                <p className="text-[11px] text-slate-500 truncate">{user?.schoolName}</p>
+              </div>
+            </div>
+            <nav className="py-2">
+              {[
+                { label: 'Hồ sơ cá nhân',      path: '/profile',          icon: '👤' },
+                { label: 'Quản lý tin của tôi', path: '/manage-listings',  icon: '📋', active: true },
+                { label: 'Tin đã lưu',          path: '/saved',            icon: '❤️' },
+                { label: 'Lịch sử giao dịch',   path: '/transactions',     icon: '🕐' },
+                { label: 'Cài đặt tài khoản',   path: '/settings',         icon: '⚙️' },
+              ].map(item => (
+                <Link key={item.label} to={item.path}
+                  className={`flex items-center gap-2.5 px-4 py-2.5 text-sm transition ${
+                    item.active ? 'bg-blue-50 text-[#1557A0] font-bold border-l-4 border-[#1557A0]' : 'text-slate-600 hover:bg-slate-50'
+                  }`}>
+                  <span>{item.icon}</span>{item.label}
+                </Link>
+              ))}
+              <div className="border-t border-slate-100 mt-2 pt-2">
+                <button className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 w-full transition">
+                  <span>🚪</span>Đăng xuất
+                </button>
+              </div>
+            </nav>
+          </div>
+        </aside>
+
+        {/* ── Main ── */}
+        <div className="flex-1 min-w-0 space-y-5">
+          <div>
+            <h1 className="text-2xl font-black text-slate-900">Quản lý tin của tôi</h1>
+            <p className="text-xs text-slate-500 mt-0.5">Theo dõi trạng thái duyệt tin, quản lý tin đang bán, tặng, trao đổi học liệu trong hệ thống ĐHQG-HCM.</p>
+          </div>
+
+          {/* Tabs */}
+          <div className="flex flex-wrap gap-1 bg-slate-100 p-1 rounded-xl overflow-x-auto">
+            {TABS.map(tab => (
+              <button key={tab.id} onClick={() => setActiveTab(tab.id)}
+                className={`text-xs font-semibold px-3 py-1.5 rounded-lg whitespace-nowrap transition flex items-center gap-1 ${
+                  activeTab === tab.id ? 'bg-white text-[#1557A0] shadow-sm font-bold' : 'text-slate-600 hover:text-slate-800'
+                }`}>
+                {tab.label}
+                {tabCount(tab.id) > 0 && (
+                  <span className={`text-[10px] font-black px-1.5 py-0.5 rounded-full ${
+                    activeTab === tab.id ? 'bg-[#1557A0] text-white' : 'bg-slate-200 text-slate-600'
+                  }`}>{tabCount(tab.id)}</span>
+                )}
+              </button>
+            ))}
+          </div>
+
+          {/* Search & Filter bar */}
+          <div className="flex flex-col sm:flex-row gap-3">
+            <input type="text" placeholder="Tìm theo tên học liệu, mã tin #L..." className="flex-1 border border-slate-200 rounded-xl px-3.5 py-2 text-sm focus:outline-none focus:border-[#1557A0]" />
+            <select className="border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700 focus:outline-none">
+              <option>Tất cả danh mục</option>
+              <option>Học liệu</option>
+              <option>Thiết bị học tập</option>
+              <option>Đồ dùng học tập</option>
+            </select>
+            <select className="border border-slate-200 rounded-xl px-3 py-2 text-sm text-slate-700 focus:outline-none">
+              <option>Loại tin: Tất cả</option>
+              <option>Bán</option>
+              <option>Tặng</option>
+              <option>Trao đổi</option>
+            </select>
+            <button className="text-xs text-[#1557A0] font-semibold hover:underline whitespace-nowrap">⟳ Đặt lại bộ lọc</button>
+          </div>
+
+          {/* Table */}
+          {filtered.length === 0 ? (
+            <div className="bg-white border border-slate-200 rounded-2xl p-10 text-center space-y-3">
+              <p className="text-3xl">📭</p>
+              <p className="text-sm font-semibold text-slate-600">Không có tin đăng nào trong mục này</p>
+              <Link to="/create-listing"><Button variant="campus" size="sm">Đăng tin mới</Button></Link>
+            </div>
+          ) : (
+            <div className="bg-white border border-slate-200 rounded-2xl overflow-hidden">
+              <table className="w-full text-xs">
+                <thead className="bg-slate-50 border-b border-slate-200">
+                  <tr>
+                    <th className="text-left px-4 py-3 text-slate-600 font-black">Ảnh &amp; Học liệu / Sản phẩm</th>
+                    <th className="text-left px-3 py-3 text-slate-600 font-black hidden sm:table-cell">Loại &amp; Danh mục</th>
+                    <th className="text-left px-3 py-3 text-slate-600 font-black hidden md:table-cell">Giá / Hình thức</th>
+                    <th className="text-left px-3 py-3 text-slate-600 font-black">Trạng thái tin</th>
+                    <th className="text-left px-3 py-3 text-slate-600 font-black hidden lg:table-cell">Ngày cập nhật</th>
+                    <th className="text-left px-3 py-3 text-slate-600 font-black">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {filtered.map(prod => {
+                    const st = STATUS_MAP[prod.status] || STATUS_MAP.active;
+                    return (
+                      <tr key={prod.id} className="hover:bg-slate-50/60 transition">
+                        <td className="px-4 py-3">
+                          <div className="flex items-center gap-3">
+                            <img src={prod.images[0]} alt="" className="w-14 h-12 rounded-xl object-cover border border-slate-200 shrink-0" />
+                            <div className="min-w-0">
+                              <p className="font-bold text-slate-800 line-clamp-2 leading-snug">{prod.title}</p>
+                              <p className="text-slate-400 mt-0.5">Mã tin: #{prod.id.slice(-4).toUpperCase()}</p>
+                              {prod.status === 'need_edit' && (
+                                <p className="text-orange-600 text-[11px] mt-1 font-semibold">⚠ Ghi chú từ BQT: Vui lòng chụp lại ảnh rõ hơn...</p>
+                              )}
+                              {prod.status === 'rejected' && (
+                                <p className="text-red-600 text-[11px] mt-1 font-semibold">✗ Lý do: Hình ảnh chứa link bán hàng ngoài khu ĐHQG.</p>
+                              )}
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-3 py-3 hidden sm:table-cell">
+                          <div className="space-y-1">
+                            <span className={`inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                              prod.listingType === 'sell' ? 'bg-[#1557A0] text-white' : prod.listingType === 'give' ? 'bg-emerald-600 text-white' : 'bg-slate-500 text-white'
+                            }`}>
+                              {prod.listingType === 'sell' ? 'Bán' : prod.listingType === 'give' ? 'Tặng' : 'Trao đổi'}
+                            </span>
+                            <p className="text-slate-500">{prod.categoryId.replace(/-/g, ' ')}</p>
+                          </div>
+                        </td>
+                        <td className="px-3 py-3 hidden md:table-cell">
+                          {prod.listingType === 'give' ? (
+                            <span className="font-black text-emerald-600">0 VND<br /><span className="text-xs font-semibold text-slate-500">(Miễn phí)</span></span>
+                          ) : prod.listingType === 'trade' ? (
+                            <span className="text-slate-500 font-semibold">Trao đổi</span>
+                          ) : (
+                            <span className="font-black text-[#1557A0]">{formatCurrency(prod.price)}</span>
+                          )}
+                        </td>
+                        <td className="px-3 py-3">
+                          <span className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-full border ${st.cls}`}>
+                            <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                            {st.label}
+                          </span>
+                          {prod.status === 'pending' && <p className="text-[11px] text-slate-400 mt-0.5">Ước tính 2–4 giờ</p>}
+                        </td>
+                        <td className="px-3 py-3 hidden lg:table-cell text-slate-500">{formatTimeAgo(prod.createdAt)}</td>
+                        <td className="px-3 py-3">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            {(prod.status === 'active' || prod.status === 'need_edit') && (
+                              <Link to={`/create-listing`} className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#1557A0] border border-[#1557A0] px-2 py-1 rounded-lg hover:bg-blue-50 transition">
+                                <Edit className="w-3 h-3" /> {prod.status === 'need_edit' ? 'Chỉnh sửa ngay' : 'Sửa'}
+                              </Link>
+                            )}
+                            {prod.status === 'active' && (
+                              <button className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 border border-slate-200 px-2 py-1 rounded-lg transition">
+                                Ghi nhận
+                              </button>
+                            )}
+                            {prod.status === 'done' && (
+                              <Link to="/create-listing" className="text-[11px] font-semibold text-[#1557A0] border border-[#1557A0] px-2 py-1 rounded-lg hover:bg-blue-50 transition flex items-center gap-1">
+                                <RefreshCw className="w-3 h-3" /> Đăng lại tin
+                              </Link>
+                            )}
+                            {prod.status === 'rejected' && (
+                              <Link to={`/products/${prod.id}`} className="text-[11px] font-semibold text-slate-600 border border-slate-200 px-2 py-1 rounded-lg hover:bg-slate-50 transition">
+                                Chi tiết
+                              </Link>
+                            )}
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+
+              {/* Pagination */}
+              <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 text-xs text-slate-500">
+                <span>Hiển thị 1 – {filtered.length} của {filtered.length} tin đăng</span>
+                <div className="flex gap-1">
+                  <button className="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 transition">‹ Trước</button>
+                  <button className="px-3 py-1 bg-[#1557A0] text-white rounded-lg font-bold">1</button>
+                  <button className="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 transition">Sau ›</button>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* AI Tip Banner */}
+          <div className="bg-[#EBF4FF] rounded-2xl border border-blue-100 p-4 flex items-start gap-3">
+            <div className="p-1.5 bg-[#1557A0] rounded-lg shrink-0">
+              <Sparkles className="w-4 h-4 text-amber-300" />
+            </div>
+            <div>
+              <p className="text-sm font-bold text-slate-800">AI Campus Assistant Gợi Ý</p>
+              <p className="text-xs text-slate-600 mt-0.5">Các tin đăng có hình ảnh chụp rõ ràng và mô tả chi tiết được duyệt nhanh hơn 45% và tiếp cận sinh viên ĐHQG hiệu quả gấp 2 lần.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
