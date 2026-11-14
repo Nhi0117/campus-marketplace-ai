@@ -38,7 +38,7 @@ export const AdminLayout = () => {
 
         <div className="flex items-center gap-3 sm:gap-4">
           <Link
-            to="/?view=student"
+            to="/"
             target="_blank"
             className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold text-white transition-colors"
           >
