@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, MapPin, Star, User } from 'lucide-react';
+import { Heart, MapPin, Star, User, Clock } from 'lucide-react';
 import { formatCurrency, formatTimeAgo } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 
@@ -84,8 +84,8 @@ export const ProductCard = ({ product }) => {
           </h3>
         </Link>
 
-        {/* Price */}
-        <div>
+        {/* Price & Posted Date */}
+        <div className="flex items-center justify-between gap-2">
           {isGive ? (
             <p className="text-base font-black text-emerald-600">Miễn phí</p>
           ) : isTrade ? (
@@ -96,6 +96,13 @@ export const ProductCard = ({ product }) => {
               {product.originalPrice && (
                 <span className="text-xs text-slate-400 line-through">{formatCurrency(product.originalPrice)}</span>
               )}
+            </div>
+          )}
+
+          {product.createdAt && (
+            <div className="flex items-center gap-1 text-[11px] text-slate-400 shrink-0 font-medium">
+              <Clock className="w-3 h-3 text-slate-400" />
+              <span>{formatTimeAgo(product.createdAt)}</span>
             </div>
           )}
         </div>

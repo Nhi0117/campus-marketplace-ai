@@ -48,6 +48,9 @@ export const ProductListPage = () => {
 
   const filtered = useMemo(() => {
     return products.filter(p => {
+      // Chỉ hiển thị các tin đăng đã được Admin duyệt (active) trên trang danh mục
+      if (p.status && p.status !== 'active') return false;
+
       if (query.trim()) {
         const txt = `${p.title} ${p.description || ''} ${p.schoolName} ${p.location} ${(p.tags || []).join(' ')}`.toLowerCase();
         if (!txt.includes(query.toLowerCase())) return false;

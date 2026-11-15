@@ -18,7 +18,10 @@ export const HomePage = () => {
     else navigate('/products');
   };
 
-  const newProducts = [...products].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)).slice(0, 8);
+  const newProducts = [...products]
+    .filter(p => !p.status || p.status === 'active')
+    .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))
+    .slice(0, 8);
 
   const QUICK_TAGS = ['Giáo trình', 'Máy tính cầm tay', 'Đồ ký túc xá...'];
 

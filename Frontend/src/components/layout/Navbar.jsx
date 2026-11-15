@@ -228,10 +228,11 @@ export const Navbar = () => {
                   {/* Chat Icon */}
                   <Link
                     to="/chat"
-                    className="p-2 text-slate-600 hover:text-[#1557A0] rounded-full hover:bg-slate-100 transition"
+                    className="p-2 text-slate-600 hover:text-[#1557A0] rounded-full hover:bg-slate-100 transition relative"
                     title="Hộp thư"
                   >
                     <MessageSquare className="w-5 h-5" />
+                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
                   </Link>
 
                   {/* Post listing button */}

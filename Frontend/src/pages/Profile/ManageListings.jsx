@@ -30,14 +30,35 @@ const TABS = [
 
 export const ManageListingsPage = () => {
   const { user } = useAuth();
-  const { products } = useProducts();
+  const { products, updateProductStatus, deleteProduct } = useProducts();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('all');
 
-  const myProducts = products.filter(p => p.seller?.id === user?.id || p.seller?.name === user?.shortName || p.seller?.name === user?.name);
-  const filtered   = activeTab === 'all' ? myProducts : myProducts.filter(p => p.status === activeTab);
+  const myProducts = products.filter(p => {
+    if (!user) return p.seller?.id === 'guest' || p.seller?.id === 'user_1';
+    return (
+      p.seller?.id === user?.id ||
+      p.seller?.name === user?.shortName ||
+      p.seller?.name === user?.name ||
+      p.seller?.email === user?.email ||
+      (user?.id === 'user_1' && (p.seller?.id === 'user_1' || p.seller?.name === 'Gia Bảo'))
+    );
+  });
 
+  const filtered   = activeTab === 'all' ? myProducts : myProducts.filter(p => p.status === activeTab);
   const tabCount = (id) => id === 'all' ? myProducts.length : myProducts.filter(p => p.status === id).length;
+
+  const handleCancelListing = (id, title) => {
+    if (window.confirm(`Bạn có chắc chắn muốn hủy đăng tin "${title}" không? Sau khi hủy, tin sẽ được chuyển sang danh sách Đã hủy và gỡ khỏi chợ sinh viên.`)) {
+      updateProductStatus(id, 'deleted');
+    }
+  };
+
+  const handlePermanentDelete = (id, title) => {
+    if (window.confirm(`Bạn có chắc chắn muốn xóa vĩnh viễn tin "${title}" khỏi hệ thống không? Hành động này không thể hoàn tác.`)) {
+      deleteProduct(id);
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
@@ -131,9 +152,13 @@ export const ManageListingsPage = () => {
                       <tr key={prod.id} className="hover:bg-slate-50/60 transition">
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
-                            <img src={prod.images[0]} alt="" className="w-14 h-12 rounded-xl object-cover border border-slate-200 shrink-0" />
+                            <Link to={`/products/${prod.id}`} className="shrink-0 group">
+                              <img src={prod.images[0]} alt="" className="w-14 h-12 rounded-xl object-cover border border-slate-200 group-hover:opacity-90 transition" />
+                            </Link>
                             <div className="min-w-0">
-                              <p className="font-bold text-slate-800 line-clamp-2 leading-snug">{prod.title}</p>
+                              <Link to={`/products/${prod.id}`} className="font-bold text-slate-800 line-clamp-2 leading-snug hover:text-[#1557A0] transition">
+                                {prod.title}
+                              </Link>
                               <p className="text-slate-400 mt-0.5">Mã tin: #{prod.id.slice(-4).toUpperCase()}</p>
                               {prod.status === 'need_edit' && (
                                 <p className="text-orange-600 text-[11px] mt-1 font-semibold">⚠ Ghi chú từ BQT: Vui lòng chụp lại ảnh rõ hơn...</p>
@@ -173,24 +198,37 @@ export const ManageListingsPage = () => {
                         <td className="px-3 py-3 hidden lg:table-cell text-slate-500">{formatTimeAgo(prod.createdAt)}</td>
                         <td className="px-3 py-3">
                           <div className="flex items-center gap-1.5 flex-wrap">
-                            {(prod.status === 'active' || prod.status === 'need_edit') && (
-                              <Link to={`/create-listing`} className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#1557A0] border border-[#1557A0] px-2 py-1 rounded-lg hover:bg-blue-50 transition">
-                                <Edit className="w-3 h-3" /> {prod.status === 'need_edit' ? 'Chỉnh sửa ngay' : 'Sửa'}
-                              </Link>
-                            )}
-                            {prod.status === 'active' && (
-                              <button className="text-[11px] font-semibold text-slate-500 hover:text-slate-700 border border-slate-200 px-2 py-1 rounded-lg transition">
-                                Ghi nhận
+                            {/* Cho phép user luôn bấm vào xem lại tin đăng ở bất kỳ trạng thái nào */}
+                            <Link
+                              to={`/products/${prod.id}`}
+                              className="inline-flex items-center gap-1 text-[11px] font-semibold text-[#1557A0] bg-blue-50 border border-blue-200 px-2 py-1 rounded-lg hover:bg-blue-100 transition"
+                              title="Bấm để xem lại chi tiết tin đăng"
+                            >
+                              <Eye className="w-3.5 h-3.5" /> Xem lại
+                            </Link>
+
+                            {/* Cho phép yêu cầu hủy / xóa tin đăng */}
+                            {prod.status !== 'deleted' ? (
+                              <button
+                                onClick={() => handleCancelListing(prod.id, prod.title)}
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-rose-600 bg-rose-50 border border-rose-200 px-2 py-1 rounded-lg hover:bg-rose-100 transition"
+                                title="Yêu cầu hủy đăng tin này"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" /> Hủy tin
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handlePermanentDelete(prod.id, prod.title)}
+                                className="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 border border-slate-200 px-2 py-1 rounded-lg hover:bg-slate-200 transition"
+                                title="Xóa vĩnh viễn tin đăng khỏi danh sách"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" /> Xóa hẳn
                               </button>
                             )}
-                            {prod.status === 'done' && (
-                              <Link to="/create-listing" className="text-[11px] font-semibold text-[#1557A0] border border-[#1557A0] px-2 py-1 rounded-lg hover:bg-blue-50 transition flex items-center gap-1">
-                                <RefreshCw className="w-3 h-3" /> Đăng lại tin
-                              </Link>
-                            )}
-                            {prod.status === 'rejected' && (
-                              <Link to={`/products/${prod.id}`} className="text-[11px] font-semibold text-slate-600 border border-slate-200 px-2 py-1 rounded-lg hover:bg-slate-50 transition">
-                                Chi tiết
+
+                            {prod.status === 'need_edit' && (
+                              <Link to={`/create-listing`} className="inline-flex items-center gap-1 text-[11px] font-semibold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-1 rounded-lg hover:bg-amber-100 transition">
+                                <Edit className="w-3 h-3" /> Sửa
                               </Link>
                             )}
                           </div>

@@ -48,6 +48,36 @@ export const ProductDetailPage = () => {
         <span className="text-slate-700 font-medium line-clamp-1 max-w-[200px]">{product.title}</span>
       </nav>
 
+      {/* Thông báo trạng thái tin nếu chưa active */}
+      {product.status && product.status !== 'active' && (
+        <div className={`p-4 rounded-2xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+          product.status === 'pending'
+            ? 'bg-amber-50 border-amber-200 text-amber-900'
+            : product.status === 'rejected'
+            ? 'bg-red-50 border-red-200 text-red-900'
+            : 'bg-slate-50 border-slate-200 text-slate-700'
+        }`}>
+          <div className="flex items-center gap-2.5">
+            <AlertCircle className="w-5 h-5 shrink-0" />
+            <div>
+              <p className="text-xs font-bold">
+                Trạng thái: {product.status === 'pending' ? 'Chờ kiểm duyệt' : product.status === 'rejected' ? 'Bị từ chối duyệt' : product.status === 'deleted' ? 'Đã hủy' : product.status}
+              </p>
+              <p className="text-[11px] opacity-80 mt-0.5">
+                {product.status === 'pending'
+                  ? 'Tin của bạn đã được gửi đến BQT ĐHQG-HCM và đang chờ kiểm duyệt. Sau khi Admin duyệt, tin sẽ tự động hiển thị ra Trang chủ và Danh mục.'
+                  : product.status === 'rejected'
+                  ? 'Tin đăng chưa đạt tiêu chuẩn. Vui lòng kiểm tra lại hình ảnh hoặc nội dung.'
+                  : 'Tin đăng hiện không công khai.'}
+              </p>
+            </div>
+          </div>
+          <Link to="/manage-listings" className="text-xs font-bold underline shrink-0 hover:opacity-80">
+            Quản lý tin đăng →
+          </Link>
+        </div>
+      )}
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
         {/* ── Left: Images + Description ── */}
         <div className="lg:col-span-7 space-y-5">

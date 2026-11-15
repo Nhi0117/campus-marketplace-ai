@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Sparkles, ImagePlus, Info, ArrowLeft, ShieldCheck } from 'lucide-react';
+import { Sparkles, ImagePlus, Info, ArrowLeft, ShieldCheck, X, UploadCloud, CheckCircle2 } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
 import { SCHOOLS } from '../../data/schools';
 import { useProducts } from '../../hooks/useProducts';
@@ -28,12 +28,32 @@ export const CreateListingPage = () => {
     schoolId: user?.schoolId || 'HCMUT', price: '', condition: 'Như mới',
     imageUrl: '', description: '', tradeFor: '', tags: '',
   });
+  const [uploadedImages, setUploadedImages] = useState([]);
   const [loading,     setLoading]     = useState(false);
   const [aiLoading,   setAILoading]   = useState(false);
   const [aiHighlight, setAiHighlight] = useState('');
   const [aiDraft,     setAiDraft]     = useState('');
+  const [submittedNotice, setSubmittedNotice] = useState(false);
 
   const set = (name, value) => setForm(prev => ({ ...prev, [name]: value }));
+
+  // Xử lý tải nhiều ảnh từ máy tính
+  const handleFileUpload = (e) => {
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    files.forEach(file => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setUploadedImages(prev => [...prev, reader.result]);
+      };
+      reader.readAsDataURL(file);
+    });
+  };
+
+  const handleRemoveImage = (indexToRemove) => {
+    setUploadedImages(prev => prev.filter((_, idx) => idx !== indexToRemove));
+  };
 
   // Nếu chưa đăng nhập, hiển thị màn hình yêu cầu đăng nhập
   if (!user) {
@@ -86,14 +106,19 @@ export const CreateListingPage = () => {
     if (!form.title.trim()) { alert('Vui lòng nhập tên sản phẩm!'); return; }
     if (form.listingType === 'sell' && !form.price) { alert('Vui lòng nhập giá bán!'); return; }
     setLoading(true);
+
     const school = SCHOOLS.find(s => s.id === form.schoolId) || SCHOOLS[1];
+    const finalImages = uploadedImages.length > 0 
+      ? uploadedImages 
+      : (form.imageUrl ? [form.imageUrl] : ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80']);
+
     const created = addProduct({
       ...form,
       price: form.listingType === 'sell' ? Number(form.price) : 0,
       schoolName: school.shortName,
       location: `KTX / ${school.name}`,
-      images: [form.imageUrl || 'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80'],
-      tags: form.tags.split(',').map(t => t.trim()).filter(Boolean),
+      images: finalImages,
+      tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : ['học liệu', 'sinh viên'],
       detailInfo: {
         listingType: LISTING_TYPES.find(t => t.id === form.listingType)?.label,
         category: CATEGORIES.find(c => c.id === form.categoryId)?.name,
@@ -101,10 +126,23 @@ export const CreateListingPage = () => {
         postedDate: new Date().toLocaleDateString('vi-VN'),
         meetingPoint: 'Trực tiếp tại Làng Đại học / KTX',
       },
-      status: 'pending',
-      seller: { id: user?.id || 'guest', name: user?.shortName || user?.name || 'Sinh viên', school: school.shortName, rating: 5.0, reviewCount: 0, avatar: user?.avatar || null, verified: user?.verifiedStudent ?? true },
+      status: 'pending', // Luôn ở trạng thái chờ Admin duyệt
+      seller: { 
+        id: user?.id || 'guest', 
+        name: user?.name || user?.shortName || 'Sinh viên', 
+        school: user?.schoolName || school.shortName, 
+        rating: 5.0, 
+        reviewCount: 0, 
+        avatar: user?.avatar || null, 
+        verified: user?.verifiedStudent ?? true 
+      },
     });
-    setTimeout(() => { setLoading(false); navigate(`/products/${created.id}`); }, 400);
+
+    setSubmittedNotice(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/manage-listings');
+    }, 1200);
   };
 
   return (
@@ -191,14 +229,68 @@ export const CreateListingPage = () => {
               </div>
             </div>
 
-            {/* Images (placeholder for now) */}
-            <div className="space-y-2">
-              <label className="text-xs font-black text-slate-700">Hình ảnh sản phẩm <span className="text-slate-400 font-normal">(URL ảnh thực tế)</span></label>
-              <input type="url" placeholder="https://..." value={form.imageUrl} onChange={e => set('imageUrl', e.target.value)}
-                className="w-full border border-slate-200 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:border-[#1557A0]" />
-              <div className="border-2 border-dashed border-slate-200 rounded-xl p-5 text-center text-xs text-slate-400 flex flex-col items-center gap-2">
-                <ImagePlus className="w-7 h-7 text-slate-300" />
-                <span>Tính năng tải ảnh lên sẽ được tích hợp ở Phase 2</span>
+            {/* Hình ảnh sản phẩm (Hỗ trợ tải nhiều ảnh thực tế) */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-black text-slate-700">
+                  Hình ảnh sản phẩm <span className="text-red-500">*</span>
+                </label>
+                <span className="text-[11px] text-slate-500 font-medium">
+                  Đã chọn {uploadedImages.length} ảnh
+                </span>
+              </div>
+
+              {/* Khu vực bấm chọn tải ảnh từ máy tính */}
+              <label className="border-2 border-dashed border-blue-200 hover:border-[#1557A0] bg-blue-50/40 hover:bg-blue-50/80 rounded-2xl p-6 text-center text-xs text-slate-600 flex flex-col items-center justify-center gap-2 cursor-pointer transition-colors shadow-2xs">
+                <div className="w-10 h-10 rounded-full bg-white shadow-xs flex items-center justify-center text-[#1557A0]">
+                  <UploadCloud className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="font-bold text-[#1557A0] text-sm block">Bấm để tải ảnh từ máy tính</span>
+                  <span className="text-[11px] text-slate-500">Hỗ trợ JPG, PNG, WEBP (Có thể chọn nhiều ảnh cùng lúc)</span>
+                </div>
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  className="hidden"
+                />
+              </label>
+
+              {/* Danh sách ảnh đã tải lên xem trước */}
+              {uploadedImages.length > 0 && (
+                <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5 pt-1">
+                  {uploadedImages.map((img, idx) => (
+                    <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-slate-200 group shadow-2xs">
+                      <img src={img} alt="" className="w-full h-full object-cover" />
+                      {idx === 0 && (
+                        <span className="absolute bottom-1 left-1 px-1.5 py-0.5 rounded text-[9px] font-bold bg-[#1557A0] text-white">
+                          Ảnh bìa
+                        </span>
+                      )}
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveImage(idx)}
+                        className="absolute top-1 right-1 w-5 h-5 rounded-full bg-red-600 text-white flex items-center justify-center shadow opacity-90 hover:opacity-100 transition-opacity"
+                        title="Xóa ảnh này"
+                      >
+                        <X className="w-3 h-3" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Tùy chọn dán URL ảnh bổ sung */}
+              <div className="pt-1">
+                <input 
+                  type="url" 
+                  placeholder="Hoặc dán URL hình ảnh online (https://...)" 
+                  value={form.imageUrl} 
+                  onChange={e => set('imageUrl', e.target.value)}
+                  className="w-full border border-slate-200 rounded-xl px-3.5 py-2 text-xs focus:outline-none focus:border-[#1557A0] placeholder-slate-400" 
+                />
               </div>
             </div>
 
@@ -218,6 +310,14 @@ export const CreateListingPage = () => {
               <input type="checkbox" required className="accent-[#1557A0]" />
               Tôi đã đọc và xác nhận nội dung mô tả
             </label>
+
+            {/* Thông báo gửi duyệt thành công */}
+            {submittedNotice && (
+              <div className="p-4 rounded-xl bg-emerald-50 border border-emerald-300 text-xs font-bold text-emerald-800 flex items-center gap-2.5 shadow-xs animate-pulse">
+                <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+                <span>Gửi duyệt tin thành công! Tin của bạn đã được chuyển tới Ban Quản Trị ĐHQG để phê duyệt. Đang chuyển hướng...</span>
+              </div>
+            )}
 
             {/* Footer buttons */}
             <div className="flex items-center gap-3 pt-2 border-t border-slate-100">

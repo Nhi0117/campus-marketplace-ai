@@ -1,17 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckSquare, XCircle, CheckCircle2, Clock, Eye, AlertCircle, Sparkles, Filter, ChevronRight } from 'lucide-react';
-import { PRODUCTS } from '../../data/products';
+import { CheckSquare, XCircle, CheckCircle2, Clock, Eye, AlertCircle, Sparkles, Filter, ChevronRight, Check } from 'lucide-react';
 import { formatCurrency, formatTimeAgo } from '../../utils/format';
 import { AdminSidebar } from './AdminSidebar';
+import { useProducts } from '../../hooks/useProducts';
 
 export const AdminPage = () => {
-  const [productList, setProductList] = useState(PRODUCTS);
-  const [selectedId, setSelectedId] = useState(PRODUCTS.find(p => p.status === 'pending')?.id || PRODUCTS[0]?.id);
+  const { products, updateProductStatus } = useProducts();
+  const [selectedId, setSelectedId] = useState(null);
   const [filterTab, setFilterTab] = useState('pending'); // all | pending | approved | rejected
+  const [actionAlert, setActionAlert] = useState('');
 
-  const pendingCount = productList.filter(p => p.status === 'pending').length;
-  const approvedToday = 14;
+  const productList = products;
+  const pendingCount = productList.filter(p => p.status === 'pending' || p.status === 'need_edit').length;
+  const approvedToday = productList.filter(p => p.status === 'active').length;
   const rejectedCount = productList.filter(p => p.status === 'rejected').length;
 
   const filteredProducts = productList.filter(p => {
@@ -21,14 +23,22 @@ export const AdminPage = () => {
     return true;
   });
 
-  const selectedProduct = productList.find(p => p.id === selectedId) || productList[0];
+  const currentSelectedId = selectedId && filteredProducts.some(p => p.id === selectedId)
+    ? selectedId
+    : (filteredProducts[0]?.id || null);
+
+  const selectedProduct = productList.find(p => p.id === currentSelectedId) || filteredProducts[0] || null;
 
   const handleApprove = (id) => {
-    setProductList(prev => prev.map(p => p.id === id ? { ...p, status: 'active' } : p));
+    updateProductStatus(id, 'active');
+    setActionAlert('Đã duyệt và công khai tin đăng lên trang chủ & danh mục sản phẩm!');
+    setTimeout(() => setActionAlert(''), 3500);
   };
 
   const handleReject = (id) => {
-    setProductList(prev => prev.map(p => p.id === id ? { ...p, status: 'rejected' } : p));
+    updateProductStatus(id, 'rejected');
+    setActionAlert('Đã từ chối tin đăng và ghi nhận lý do.');
+    setTimeout(() => setActionAlert(''), 3500);
   };
 
   return (
