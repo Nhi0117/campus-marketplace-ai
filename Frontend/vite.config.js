@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5175,
+    host: true, // Mở mạng LAN: cho phép bạn bè cùng Wi-Fi xem trực tiếp
     open: true,
   },
 });
