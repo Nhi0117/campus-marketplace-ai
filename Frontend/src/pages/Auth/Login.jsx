@@ -68,6 +68,8 @@ export const LoginPage = () => {
         setError(res.message);
         if (res.error === 'USER_NOT_FOUND') {
           setNeedRegister(true);
+        } else {
+          setNeedRegister(false);
         }
       } else {
         // Nếu là tài khoản Admin, chuyển thẳng vào Giao diện Quản trị Admin (bỏ qua trang chủ guest/user)

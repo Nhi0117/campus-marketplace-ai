@@ -15,6 +15,7 @@ export const RegisterPage = () => {
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState(initialEmail);
   const [schoolName, setSchoolName] = useState('Đại học Bách Khoa');
+  const [customSchoolName, setCustomSchoolName] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -43,6 +44,10 @@ export const RegisterPage = () => {
       setError('Vui lòng nhập địa chỉ email hợp lệ.');
       return;
     }
+    if (schoolName === 'Khác' && !customSchoolName.trim()) {
+      setError('Vui lòng nhập tên trường đại học/cao đẳng của bạn.');
+      return;
+    }
     if (password.length < 6) {
       setError('Mật khẩu phải có tối thiểu 6 ký tự.');
       return;
@@ -52,13 +57,16 @@ export const RegisterPage = () => {
       return;
     }
 
+    const finalSchoolName = schoolName === 'Khác' ? customSchoolName.trim() : schoolName;
+
     setLoading(true);
     setTimeout(() => {
       const res = register({
         name: fullName,
         email,
-        schoolName,
+        schoolName: finalSchoolName,
         phone,
+        password,
       });
 
       setLoading(false);
@@ -202,9 +210,29 @@ export const RegisterPage = () => {
                     <option value="Đại học Kinh tế - Luật">Đại học Kinh tế - Luật (UEL)</option>
                     <option value="Đại học KHXH & Nhân văn">Đại học KHXH & Nhân văn (USSH)</option>
                     <option value="Đại học Quốc Tế">Đại học Quốc Tế (IU)</option>
-                    <option value="Khoa Y - ĐHQG-HCM">Khoa Y - ĐHQG-HCM (MED)</option>
+                    <option value="Trường Đại học Khoa học Sức khỏe">Trường Đại học Khoa học Sức khỏe (UHS)</option>
                     <option value="Đại học An Giang">Đại học An Giang (AGU)</option>
+                    <option value="Khác">Khác (Trường ngoài hệ thống ĐHQG-HCM)</option>
                   </select>
+
+                  {schoolName === 'Khác' && (
+                    <div className="mt-2.5 space-y-1 animate-fadeIn">
+                      <label className="block text-xs font-semibold text-slate-700">
+                        Nhập tên trường của bạn <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        value={customSchoolName}
+                        onChange={(e) => setCustomSchoolName(e.target.value)}
+                        placeholder="ví dụ: ĐH Sư phạm Kỹ thuật, ĐH Sài Gòn,..."
+                        className="w-full px-3.5 py-2.5 rounded-xl border border-blue-400 bg-blue-50/30 text-sm text-slate-800 placeholder-slate-400 focus:outline-none focus:border-[#1557A0] focus:ring-2 focus:ring-[#1557A0]/10"
+                        autoFocus
+                      />
+                      <p className="text-[11px] text-slate-500">
+                        Bạn có thể nhập tên trường của mình nếu không nằm trong danh sách ĐHQG-HCM.
+                      </p>
+                    </div>
+                  )}
                 </div>
 
                 <div>

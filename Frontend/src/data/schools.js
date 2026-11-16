@@ -52,11 +52,11 @@ export const SCHOOLS = [
     location: 'Khu phố 6, P. Linh Trung, TP. Thủ Đức'
   },
   {
-    id: 'MED',
-    code: 'KHOA-Y',
-    name: 'Khoa Y (Trường ĐH Khoa học Sức khỏe)',
-    shortName: 'Khoa Y ĐHQG',
-    location: 'Khu Đô thị ĐHQG-HCM'
+    id: 'UHS',
+    code: 'UHS',
+    name: 'Trường Đại học Khoa học Sức khỏe',
+    shortName: 'ĐH Khoa học Sức khỏe (UHS)',
+    location: 'Khu Đô thị ĐHQG-HCM, TP. Dĩ An & Thủ Đức'
   },
   {
     id: 'AGU',
@@ -64,5 +64,12 @@ export const SCHOOLS = [
     name: 'Trường Đại học An Giang',
     shortName: 'ĐH An Giang',
     location: 'TP. Long Xuyên, An Giang'
+  },
+  {
+    id: 'OTHER',
+    code: 'KHAC',
+    name: 'Khác (Trường ngoài ĐHQG-HCM)',
+    shortName: 'Trường khác',
+    location: 'Ngoài ĐHQG-HCM'
   }
 ];

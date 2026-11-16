@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
     localStorage.setItem('campus_saved_products', JSON.stringify(savedProducts));
   }, [savedProducts]);
 
-  // Đăng nhập: kiểm tra xem tài khoản đã có trong danh sách chưa
+  // Đăng nhập: kiểm tra xem tài khoản đã có trong danh sách chưa và kiểm tra mật khẩu
   const login = (email, password) => {
     const normalizedEmail = email.trim().toLowerCase();
     const found = usersList.find(u => u.email.toLowerCase() === normalizedEmail);
@@ -70,12 +70,22 @@ export const AuthProvider = ({ children }) => {
       };
     }
 
+    // Kiểm tra mật khẩu chính xác
+    const expectedPassword = found.password || '12345678';
+    if (!password || password !== expectedPassword) {
+      return {
+        success: false,
+        error: 'WRONG_PASSWORD',
+        message: 'Mật khẩu không chính xác. Vui lòng kiểm tra lại!'
+      };
+    }
+
     setUser(found);
     return { success: true, user: found };
   };
 
   // Đăng ký tài khoản mới: ghi dữ liệu vào usersList
-  const register = ({ name, email, schoolName, phone }) => {
+  const register = ({ name, email, schoolName, phone, password }) => {
     const normalizedEmail = email.trim().toLowerCase();
     const existing = usersList.find(u => u.email.toLowerCase() === normalizedEmail);
 
@@ -100,6 +110,7 @@ export const AuthProvider = ({ children }) => {
       email: normalizedEmail,
       schoolName: schoolName || 'Đại học Quốc gia TP.HCM',
       phone: phone || '',
+      password: password || '12345678', // Lưu mật khẩu người dùng đã nhập
       studentId: '24' + Math.floor(100000 + Math.random() * 900000),
       rating: 5.0,
       reviewCount: 0,
