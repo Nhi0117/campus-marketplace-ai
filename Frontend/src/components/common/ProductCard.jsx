@@ -45,10 +45,14 @@ export const ProductCard = ({ product }) => {
       {/* Image */}
       <Link to={`/products/${product.id}`} className="relative aspect-[4/3] block overflow-hidden bg-slate-100 shrink-0">
         <img
-          src={product.images[0]}
+          src={product.images && product.images[0] ? encodeURI(product.images[0]) : '/favicon.svg'}
           alt={product.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
+          onError={(e) => {
+            e.target.onerror = null;
+            e.target.src = '/image/products/gt_kinh_te_vi_mo.jfif';
+          }}
         />
 
         {/* Badges top-left: loại tin + tình trạng */}

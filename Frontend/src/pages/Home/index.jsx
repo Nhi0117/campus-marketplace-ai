@@ -153,7 +153,7 @@ export const HomePage = () => {
             to="/products"
             className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-white border-2 border-[#1557A0] text-[#1557A0] font-bold text-sm hover:bg-[#1557A0] hover:text-white transition-all duration-200 shadow-xs hover:shadow-md group"
           >
-<span>Xem chi tiết tất cả danh mục sản phẩm</span>
+            <span>Xem chi tiết tất cả danh mục sản phẩm</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
