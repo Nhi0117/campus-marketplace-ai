@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useProducts } from '../../hooks/useProducts';
 import { formatCurrency, formatTimeAgo } from '../../utils/format';
-import { ShieldCheck, Star, Edit, Eye, EyeOff, Trash2, RefreshCw, Sparkles } from 'lucide-react';
+import { ShieldCheck, Star, Edit, Eye, EyeOff, Trash2, RefreshCw, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 import { ProfileSidebar } from './ProfileSidebar';
 
@@ -242,10 +242,14 @@ export const ManageListingsPage = () => {
               {/* Pagination */}
               <div className="flex items-center justify-between px-4 py-3 border-t border-slate-100 text-xs text-slate-500">
                 <span>Hiển thị 1 – {filtered.length} của {filtered.length} tin đăng</span>
-                <div className="flex gap-1">
-                  <button className="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 transition">‹ Trước</button>
-                  <button className="px-3 py-1 bg-[#1557A0] text-white rounded-lg font-bold">1</button>
-                  <button className="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 transition">Sau ›</button>
+                <div className="flex items-center gap-1.5">
+                  <button className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition shadow-2xs">
+                    <ChevronLeft className="w-3.5 h-3.5" /> Trước
+                  </button>
+                  <button className="w-8 h-8 bg-[#1557A0] text-white rounded-xl font-bold text-xs shadow-xs">1</button>
+                  <button className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-50 transition shadow-2xs">
+                    Sau <ChevronRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
             </div>

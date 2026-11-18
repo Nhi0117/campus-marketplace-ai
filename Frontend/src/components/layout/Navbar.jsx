@@ -284,11 +284,25 @@ export const Navbar = () => {
                 </>
               ) : (
                 <>
-                  <Link to="/login">
-                    <Button variant="outline" size="sm">Đăng nhập</Button>
+                  <Link
+                    to="/login"
+                    className={`inline-flex items-center justify-center font-semibold rounded-xl text-xs px-3.5 py-2 transition-all ${
+                      location.pathname === '/login'
+                        ? 'bg-[#1557A0] text-white shadow-xs'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    Đăng nhập
                   </Link>
-                  <Link to="/register">
-                    <Button variant="campus" size="sm">Đăng ký</Button>
+                  <Link
+                    to="/register"
+                    className={`inline-flex items-center justify-center font-semibold rounded-xl text-xs px-3.5 py-2 transition-all ${
+                      location.pathname === '/register'
+                        ? 'bg-[#1557A0] text-white shadow-xs'
+                        : 'bg-white text-slate-700 border border-slate-200 hover:bg-slate-50'
+                    }`}
+                  >
+                    Đăng ký
                   </Link>
                   <button
                     onClick={handlePostListingClick}

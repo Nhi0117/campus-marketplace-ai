@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { RotateCcw, ChevronDown, Sparkles } from 'lucide-react';
+import { RotateCcw, ChevronDown, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import { CATEGORIES } from '../../data/categories';
 import { SCHOOLS } from '../../data/schools';
@@ -254,14 +254,15 @@ export const ProductListPage = () => {
                   Hiển thị {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} trên tổng số {filtered.length} sản phẩm
                 </span>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 shadow-2xs transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    ‹ Trước
+                    <ChevronLeft className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Trước</span>
                   </button>
 
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
@@ -269,10 +270,10 @@ export const ProductListPage = () => {
                       key={pageNumber}
                       type="button"
                       onClick={() => handlePageChange(pageNumber)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                      className={`w-8 h-8 rounded-xl text-xs font-bold transition-all shadow-2xs ${
                         currentPage === pageNumber
                           ? 'bg-[#1557A0] text-white shadow-xs'
-                          : 'border border-slate-200 text-slate-700 hover:bg-slate-50'
+                          : 'bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 hover:border-slate-300'
                       }`}
                     >
                       {pageNumber}
@@ -283,9 +284,10 @@ export const ProductListPage = () => {
                     type="button"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-1 px-3 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:border-slate-300 shadow-2xs transition-all disabled:opacity-40 disabled:cursor-not-allowed"
                   >
-                    Sau ›
+                    <span>Sau</span>
+                    <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
                   </button>
                 </div>
               </div>
