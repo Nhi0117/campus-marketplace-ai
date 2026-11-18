@@ -29,9 +29,7 @@ export const PRODUCTS = [
     location: 'Trực tiếp tại Làng Đại học / KTX Khu B',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_kinh_te_vi_mo.jfif',
     ],
     seller: { id: 'user_2', name: 'Minh Anh', school: 'ĐH Kinh tế - Luật', rating: 4.8, reviewCount: 12, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Giáo trình Kinh tế vi mô chuẩn chương trình ĐHQG-HCM, sách dùng cho sinh viên năm 1 và năm 2 khối ngành Kinh tế, Quản trị kinh doanh. Sách bìa mềm, giữ gìn rất cẩn thận, độ mới 98%. Toàn bộ các trang sách sạch đẹp, không hề có gạch xóa hay viết vẽ bằng bút bi.\n\nTặng kèm tập tóm tắt công thức trọng tâm thi học kỳ và các bài tập trắc nghiệm kinh tế vi mô có đáp án do mình tự tổng hợp từ ôn tập kỳ học vừa rồi.',
@@ -54,7 +52,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa BA2',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?w=800&auto=format&fit=crop&q=80',
+      '/image/products/may-tinh-bo-tui-casio-fx-570vn-plus-1.jpg',
     ],
     seller: { id: 'user_3', name: 'Quốc Huy', school: 'ĐH Bách Khoa', rating: 4.9, reviewCount: 8, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Máy tính Casio fx-580VNX chính hãng Bitex, còn tem bảo hành. Phím bấm cực êm, nắp trượt chắc chắn. Bao test tại chỗ cho các bạn trước khi lấy.',
@@ -77,7 +75,7 @@ export const PRODUCTS = [
     location: 'Cơ sở Linh Trung, Thủ Đức',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&auto=format&fit=crop&q=80',
+      '/image/products/sotay_a5.webp',
     ],
     seller: { id: 'user_4', name: 'Thu Hà', school: 'ĐH Khoa học Tự nhiên', rating: 5.0, reviewCount: 20, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Vở ghi chép đầy bài bản môn Xác suất thống kê, có công thức, bài tập mẫu. Tặng miễn phí cho bạn nào cần.',
@@ -101,7 +99,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa B5',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1618944847823-380f14d4be71?w=800&auto=format&fit=crop&q=80',
+      '/image/products/quat_tichdien.webp',
     ],
     seller: { id: 'user_1', name: 'Gia Bảo', school: 'ĐH CNTT (UIT)', rating: 4.7, reviewCount: 5, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Quạt mini để bàn, pin USB, tốc độ 3 nấc, êm ái. Muốn trao đổi lấy đèn bàn hoặc ổ cắm điện.',
@@ -124,7 +122,7 @@ export const PRODUCTS = [
     location: 'Làng Đại học Thủ Đức',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1543002588-bfa74002ed7e?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_tamlyhoc.jfif',
     ],
     seller: { id: 'user_5', name: 'Hồng Hạnh', school: 'ĐH Kinh tế - Luật', rating: 4.9, reviewCount: 15, avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Bản chuẩn ĐHQG, in bìa cứng. Còn rất mới, chỉ dùng 1 học kỳ.',
@@ -147,7 +145,7 @@ export const PRODUCTS = [
     location: 'Trường ĐH Kinh tế - Luật',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=80',
+      '/image/products/decuong_giaitich.jfif',
     ],
     seller: { id: 'user_2', name: 'Minh Anh', school: 'ĐH Kinh tế - Luật', rating: 4.8, reviewCount: 12, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Sách bài tập Kinh tế lượng có lời giải chi tiết từng bài.',
@@ -170,7 +168,7 @@ export const PRODUCTS = [
     location: 'Cơ sở Linh Trung',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1495446815901-a7297e633e8d?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_combo.jfif',
     ],
     seller: { id: 'user_6', name: 'Phương Thảo', school: 'ĐH KHXH & Nhân văn', rating: 4.8, reviewCount: 7, avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Trọn bộ Triết học Mác-Lênin. Giữ gìn kỹ, bìa sạch, ruột không viết.',
@@ -193,7 +191,7 @@ export const PRODUCTS = [
     location: 'Trường ĐH Kinh tế - Luật',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_luatthuongmaiquocte.webp',
     ],
     seller: { id: 'user_7', name: 'Khánh Linh', school: 'ĐH Kinh tế - Luật', rating: 5.0, reviewCount: 22, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Giáo trình Pháp luật đại cương bản mới nhất 2025, dùng cho sinh viên tất cả các ngành.',
@@ -216,7 +214,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa BA2',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&auto=format&fit=crop&q=80',
+      '/image/products/decuong_giaitich.jfif',
     ],
     seller: { id: 'user_3', name: 'Đức Thịnh', school: 'ĐH Bách Khoa', rating: 4.6, reviewCount: 9, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Giáo trình Giải tích 1 bản in ĐHQG, còn mới. Có ghi chú tóm tắt công thức chuẩn.',
@@ -239,7 +237,7 @@ export const PRODUCTS = [
     location: 'Trường ĐH Bách Khoa Cơ sở Dĩ An',
     condition: 'Mới',
     images: [
-      'https://images.unsplash.com/photo-1513364776144-60967b0f800f?w=800&auto=format&fit=crop&q=80',
+      '/image/products/ong_dung_ban_ve_kt.webp',
     ],
     seller: { id: 'user_8', name: 'Ngọc Lan', school: 'ĐH Bách Khoa', rating: 4.7, reviewCount: 3, avatar: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Bộ bút vẽ kỹ thuật đầy đủ: thước chữ T, eke, compa, bút kim 0.3-0.5mm cho môn vẽ kỹ thuật Bách Khoa.',
@@ -262,7 +260,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa B5',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=800&auto=format&fit=crop&q=80',
+      '/image/products/laptop.jpg',
     ],
     seller: { id: 'user_1', name: 'Đức Thịnh', school: 'ĐH CNTT (UIT)', rating: 4.6, reviewCount: 9, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Laptop dùng văn phòng cơ bản: lướt web, Word, Excel, học online tốt. RAM 8GB, SSD 256GB, pin giữ được 4 tiếng.',
@@ -285,7 +283,7 @@ export const PRODUCTS = [
     location: 'Khu phố 6, Linh Trung, Thủ Đức',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1506784983877-45594efa4cbe?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_kinh_te_vi_mo.jfif',
     ],
     seller: { id: 'user_9', name: 'Minh Tuấn', school: 'ĐH Quốc Tế', rating: 4.5, reviewCount: 4, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Giáo trình Nguyên lý Kế toán bản tiếng Anh lẫn tiếng Việt, dùng cho sinh viên IU.',
@@ -308,7 +306,7 @@ export const PRODUCTS = [
     location: 'Sảnh Trường ĐH Khoa học Sức khỏe (UHS)',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80',
+      '/image/products/ao_blouse.webp',
     ],
     seller: { id: 'user_10', name: 'Thanh Trúc', school: 'ĐH Khoa học Sức khỏe (UHS)', rating: 5.0, reviewCount: 6, avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Áo blouse trắng vải kate dày dặn, cúc bấm chắc chắn, dùng cho các buổi thí nghiệm hóa/sinh. Tặng miễn phí cho các bạn K24/K25 mới nhập học.',
@@ -331,7 +329,7 @@ export const PRODUCTS = [
     location: 'KTX Khu A - Tòa A3',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&auto=format&fit=crop&q=80',
+      '/image/products/chuot_logitech.webp',
     ],
     seller: { id: 'user_11', name: 'Trường Giang', school: 'ĐH Bách Khoa', rating: 4.9, reviewCount: 11, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Chuột click cực êm không gây ồn trong thư viện hoặc phòng ngủ KTX. Kết nối USB 2.4GHz nhạy, pin dùng còn rất lâu.',
@@ -354,7 +352,7 @@ export const PRODUCTS = [
     location: 'Trường ĐH KHXH&NV Cơ sở Thủ Đức',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_tamlyhoc.jfif',
     ],
     seller: { id: 'user_12', name: 'Bích Ngọc', school: 'ĐH KHXH & Nhân văn', rating: 4.8, reviewCount: 5, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Sách giáo trình Tâm lý học đại cương, bìa kính sạch đẹp, có đánh dấu mục ôn tập trắc nghiệm kỳ thi giữa kỳ và cuối kỳ.',
@@ -378,7 +376,7 @@ export const PRODUCTS = [
     location: 'Trường ĐH Quốc Tế - Khuôn viên ĐHQG',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=80',
+      '/image/products/tudien_oxford.webp',
     ],
     seller: { id: 'user_13', name: 'Hoàng Long', school: 'ĐH Quốc Tế', rating: 5.0, reviewCount: 8, avatar: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Bản in bìa cứng dày dặn, chuẩn tra cứu học thuật. Muốn giao lưu học liệu tiếng Nhật hoặc sách luyện thi TOEIC.',
@@ -401,7 +399,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa BA5',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=800&auto=format&fit=crop&q=80',
+      '/image/products/ban_gap_gon.webp',
     ],
     seller: { id: 'user_14', name: 'Văn Hậu', school: 'ĐH CNTT', rating: 4.7, reviewCount: 4, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Bàn gấp mặt gỗ ép phủ melamin chống nước, có rãnh cắm iPad/điện thoại và chỗ để cốc nước. Chân gập chắc chắn, để trên giường KTX học bài rất tiện.',
@@ -424,7 +422,7 @@ export const PRODUCTS = [
     location: 'Khu phố 6, Linh Trung, Thủ Đức',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1507473885765-e6ed057f782c?w=800&auto=format&fit=crop&q=80',
+      '/image/products/den_led.webp',
     ],
     seller: { id: 'user_15', name: 'Hải Đăng', school: 'ĐH KHTN', rating: 4.9, reviewCount: 14, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Đèn có 3 chế độ ánh sáng: vàng, trắng, trung tính. Pin tích điện 2400mAh dùng được 5-6 tiếng khi cúp điện ở KTX. Cần đèn uốn dẻo 360 độ.',
@@ -447,7 +445,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa C2',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1594980596870-8aa52a78d8cd?w=800&auto=format&fit=crop&q=80',
+      '/image/products/may-tinh-bo-tui-casio-fx-570vn-plus-1.jpg',
     ],
     seller: { id: 'user_16', name: 'Nhật Quang', school: 'ĐH Bách Khoa', rating: 5.0, reviewCount: 19, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Mình lên đời Casio 580 nên tặng lại máy 570VN Plus cũ cho bạn tân sinh viên nào gia đình khó khăn chưa kịp mua máy. Máy bấm nhạy, màn hình nét.',
@@ -470,7 +468,7 @@ export const PRODUCTS = [
     location: 'Sảnh ĐH Kinh tế - Luật',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=800&auto=format&fit=crop&q=80',
+      '/image/products/balo_15.6inch.webp',
     ],
     seller: { id: 'user_17', name: 'Kim Ngân', school: 'ĐH Kinh tế - Luật', rating: 4.8, reviewCount: 7, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Balo nhiều ngăn, có ngăn đệm chống sốc cho laptop, cổng luồn dây sạc dự phòng, vải polyester chống nước mưa nhẹ.',
@@ -493,8 +491,7 @@ export const PRODUCTS = [
     location: 'KTX Khu A - Tòa A12',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1484704849700-f032a568e944?w=800&auto=format&fit=crop&q=80',
+      '/image/products/tai_nghe.webp',
     ],
     seller: { id: 'user_18', name: 'Đăng Khoa', school: 'ĐH Bách Khoa', rating: 4.9, reviewCount: 16, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Tai nghe Bluetooth pin trâu 30 tiếng, đệm tai êm ái đeo lâu không đau đầu. Mình dùng học ngoại ngữ và ôn thi tại thư viện trung tâm ĐHQG rất tiện.',
@@ -517,8 +514,7 @@ export const PRODUCTS = [
     location: 'Cơ sở Thủ Đức / Trạm xe bus ĐHQG',
     condition: 'Mới',
     images: [
-      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
-      'https://images.unsplash.com/photo-1589829085413-56de8ae18c73?w=800&auto=format&fit=crop&q=80',
+      '/image/products/sotay_a5.webp',
     ],
     seller: { id: 'user_19', name: 'Thanh Thảo', school: 'ĐH KHXH & Nhân văn', rating: 5.0, reviewCount: 9, avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Sổ còng tiện thay giấy, giấy định lượng 100gsm dày dặn không lem mực bút gel hay highlight. Tặng kèm tập sticker trang trí planner.',
@@ -541,7 +537,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa BA1',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80',
+      '/image/products/giado_laptop.webp',
     ],
     seller: { id: 'user_20', name: 'Hoàng Nam', school: 'ĐH CNTT', rating: 4.8, reviewCount: 14, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Chất liệu hợp kim nhôm tản nhiệt cực tốt cho laptop, có đệm silicon chống xước máy và chống trượt. Gập lại mỏng dính bỏ balo đi học.',
@@ -564,7 +560,7 @@ export const PRODUCTS = [
     location: 'Cơ sở Linh Trung, Thủ Đức',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=800&auto=format&fit=crop&q=80',
+      '/image/products/quat_tichdien.webp',
     ],
     seller: { id: 'user_21', name: 'Quỳnh Như', school: 'ĐH KHTN', rating: 4.7, reviewCount: 8, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Quạt chạy êm không ồn, pin trâu dùng được cả buổi học khi mất điện hoặc để đầu giường KTX rất mát. Có cổng sạc Type-C tiện lợi.',
@@ -587,7 +583,7 @@ export const PRODUCTS = [
     location: 'Sảnh chính Trường ĐH Quốc Tế',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=800&auto=format&fit=crop&q=80',
+      '/image/products/flashcard_tienganh.png',
     ],
     seller: { id: 'user_22', name: 'Bảo Trâm', school: 'ĐH Quốc Tế', rating: 5.0, reviewCount: 18, avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Thẻ từ vựng in màu rõ nét, có phiên âm IPA, ví dụ câu ngữ cảnh và nghĩa tiếng Việt. Rất phù hợp cho bạn nào đang ôn thi VSTEP hoặc IELTS.',
@@ -610,7 +606,7 @@ export const PRODUCTS = [
     location: 'Cổng 1 ĐH Bách Khoa Cơ sở 2',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1602143407151-7111542de6e8?w=800&auto=format&fit=crop&q=80',
+      '/image/products/binh_lock_lock.webp',
     ],
     seller: { id: 'user_23', name: 'Tiến Đạt', school: 'ĐH Bách Khoa', rating: 4.9, reviewCount: 13, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Bình giữ nhiệt Lock&Lock chính hãng, giữ đá lạnh 12h và giữ nóng 8h. Mình đổi sang bình 1 lít nên nhượng lại cho bạn nào cần mang nước lên giảng đường.',
@@ -633,7 +629,7 @@ export const PRODUCTS = [
     location: 'Thư viện KHTN Linh Trung',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&auto=format&fit=crop&q=80',
+      '/image/products/decuong_giaitich.jfif',
     ],
     seller: { id: 'user_24', name: 'Minh Khang', school: 'ĐH KHTN', rating: 5.0, reviewCount: 25, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Mình đã qua môn A+ nên tặng lại miễn phí tập đề cương ôn thi Giải tích 1 ĐHQG-HCM, bao gồm các dạng bài chuỗi số, tích phân suy rộng và vi phân.',
@@ -656,7 +652,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa BA4',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=800&auto=format&fit=crop&q=80',
+      '/image/products/ban_phim.webp',
     ],
     seller: { id: 'user_25', name: 'Tuấn Kiệt', school: 'ĐH CNTT', rating: 4.9, reviewCount: 11, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Bàn phím Red Switch gõ rất êm không gây tiếng ồn trong phòng KTX, pin 3000mAh dùng 2-3 tuần mới cần sạc. Đầy đủ phụ kiện keycap puller và cáp đi kèm.',
@@ -679,7 +675,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa BA3',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1615663245857-ac93bb7c39e7?w=800&auto=format&fit=crop&q=80',
+      '/image/products/chuot_congthaihoc.webp',
     ],
     seller: { id: 'user_26', name: 'Đình Trọng', school: 'ĐH CNTT', rating: 4.8, reviewCount: 9, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Thiết kế góc nghiêng 57 độ giúp cổ tay luôn thư giãn tự nhiên, gõ code hoặc làm đồ án cả ngày không bị đau mỏi. Kết nối Bluetooth cực nhạy.',
@@ -702,7 +698,7 @@ export const PRODUCTS = [
     location: 'Sảnh chính Trường ĐH Kinh tế - Luật',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_luatthuongmaiquocte.webp',
     ],
     seller: { id: 'user_27', name: 'Thảo My', school: 'ĐH Kinh tế - Luật', rating: 4.9, reviewCount: 15, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Sách giáo trình chuẩn chương trình ĐHQG-HCM, bìa bóng đẹp, không gạch chân hay viết bậy. Tặng kèm tập câu hỏi thảo luận án lệ trọng tài thương mại.',
@@ -725,7 +721,7 @@ export const PRODUCTS = [
     location: 'KTX Khu A - Tòa A15',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=800&auto=format&fit=crop&q=80',
+      '/image/products/giado_laptop.webp',
     ],
     seller: { id: 'user_28', name: 'Thế Anh', school: 'ĐH Bách Khoa', rating: 5.0, reviewCount: 14, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Phù hợp cho các bạn sinh viên kiến trúc, thiết kế đồ họa hoặc giáo viên dạy online. Bút không cần sạc pin, vẽ rất mượt trên Photoshop, Illustrator.',
@@ -748,7 +744,7 @@ export const PRODUCTS = [
     location: 'KTX Khu B - Tòa BA2',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1585338107529-13afc5f02586?w=800&auto=format&fit=crop&q=80',
+      '/image/products/noi_nau_danang.webp',
     ],
     seller: { id: 'user_29', name: 'Ngọc Hân', school: 'ĐH KHTN', rating: 4.7, reviewCount: 6, avatar: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Nồi có 2 nấc nhiệt nấu mì, luộc trứng, nấu lẩu mini rất tiện lợi cho các bạn ở KTX hoặc phòng trọ. Lớp chống dính còn tốt, vệ sinh dễ dàng.',
@@ -771,7 +767,7 @@ export const PRODUCTS = [
     location: 'Cơ sở Thủ Đức / Trạm xe bus ĐHQG',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=800&auto=format&fit=crop&q=80',
+      '/image/products/gt_combo.jfif',
     ],
     seller: { id: 'user_30', name: 'Quốc Bảo', school: 'ĐH KHXH & Nhân văn', rating: 4.9, reviewCount: 17, avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Bộ sách đại cương năm nhất của Bộ Giáo dục và Đào tạo chuẩn ĐHQG-HCM. Sách sạch đẹp, có highlight các luận điểm thi trọng tâm.',
@@ -794,7 +790,7 @@ export const PRODUCTS = [
     location: 'Khoa Kỹ thuật Xây dựng - ĐH Bách Khoa',
     condition: 'Đã qua sử dụng',
     images: [
-      'https://images.unsplash.com/photo-1517842645767-c639042777db?w=800&auto=format&fit=crop&q=80',
+      '/image/products/ong_dung_ban_ve_kt.webp',
     ],
     seller: { id: 'user_31', name: 'Hữu Phước', school: 'ĐH Bách Khoa', rating: 5.0, reviewCount: 21, avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Mình bảo vệ đồ án tốt nghiệp xong nên tặng lại ống đựng bản vẽ kéo dài được từ 60cm đến 105cm, có dây đeo chéo tiện đi xe máy cho bạn khóa dưới.',
@@ -817,7 +813,7 @@ export const PRODUCTS = [
     location: 'Sảnh chính Trường ĐH Quốc Tế',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=800&auto=format&fit=crop&q=80',
+      '/image/products/kesach_mini.webp',
     ],
     seller: { id: 'user_32', name: 'Gia Huy', school: 'ĐH Quốc Tế', rating: 4.8, reviewCount: 10, avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Kệ sơn tĩnh điện chống rỉ, để giáo trình, vở ghi chép và tài liệu A4 rất gọn gàng trên bàn học KTX.',
@@ -840,7 +836,7 @@ export const PRODUCTS = [
     location: 'Sảnh Trường ĐH Khoa học Sức khỏe',
     condition: 'Như mới',
     images: [
-      'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&auto=format&fit=crop&q=80',
+      '/image/products/ao_blouse.webp',
     ],
     seller: { id: 'user_33', name: 'Yến Nhi', school: 'ĐH Khoa học Sức khỏe (UHS)', rating: 5.0, reviewCount: 16, avatar: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80', verified: true },
     description: 'Áo blouse thêu logo UHS, size L mặc thoải mái, chất vải mát ít nhăn, phù hợp cho các buổi đi viện thực tập hoặc phòng thí nghiệm sinh hóa.',

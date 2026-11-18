@@ -83,7 +83,15 @@ export const ProductDetailPage = () => {
         <div className="lg:col-span-7 space-y-5">
           {/* Main Image */}
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
-            <img src={product.images[activeImg] || product.images[0]} alt={product.title} className="w-full h-full object-cover" />
+            <img
+              src={encodeURI(product.images[activeImg] || product.images[0] || '/favicon.svg')}
+              alt={product.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/image/products/gt_kinh_te_vi_mo.jfif';
+              }}
+            />
             <span className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
               {activeImg + 1}/{product.images.length}
             </span>
@@ -95,7 +103,15 @@ export const ProductDetailPage = () => {
               {product.images.map((img, i) => (
                 <button key={i} onClick={() => setActiveImg(i)}
                   className={`w-20 h-16 rounded-xl overflow-hidden border-2 transition ${i === activeImg ? 'border-[#1557A0]' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={encodeURI(img)}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/image/products/gt_kinh_te_vi_mo.jfif';
+                    }}
+                  />
                 </button>
               ))}
             </div>

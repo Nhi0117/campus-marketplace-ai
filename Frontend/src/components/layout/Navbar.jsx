@@ -4,6 +4,7 @@ import { Search, Bell, MessageSquare, ChevronDown, CheckCircle2, Clock, X, Alert
 import { useAuth } from '../../context/AuthContext';
 import { Button } from '../common/Button';
 import { CATEGORIES } from '../../data/categories';
+import { CategoryIcon } from '../common/CategoryIcon';
 
 const MOCK_NOTIFICATIONS = [
   {
@@ -111,9 +112,11 @@ export const Navbar = () => {
                         key={cat.id}
                         to={`/products?category=${cat.id}`}
                         onClick={() => setIsCategoryOpen(false)}
-                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-[#1557A0] transition"
+                        className="flex items-center gap-2.5 px-4 py-2.5 text-sm text-slate-700 hover:bg-blue-50 hover:text-[#1557A0] transition group"
                       >
-                        <span className="text-base">{cat.icon}</span>
+                        <div className="w-8 h-8 rounded-lg bg-blue-50 flex items-center justify-center shrink-0 group-hover:bg-[#1557A0] group-hover:text-white transition">
+                          <CategoryIcon id={cat.id} className="w-4 h-4 text-slate-700 group-hover:text-white transition" strokeWidth={2.2} />
+                        </div>
                         <div>
                           <div className="font-semibold text-sm">{cat.name}</div>
                           <div className="text-[11px] text-slate-400">{cat.description}</div>

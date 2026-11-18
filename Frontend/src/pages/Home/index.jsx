@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
+import { CategoryIcon } from '../../components/common/CategoryIcon';
 import { SCHOOLS } from '../../data/schools';
 import { useProducts } from '../../hooks/useProducts';
 import { ProductCard } from '../../components/common/ProductCard';
@@ -118,7 +119,9 @@ export const HomePage = () => {
           {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
             <Link key={cat.id} to={`/products?category=${cat.id}`}
               className="flex flex-col items-center gap-3 p-5 bg-[#EBF4FF] rounded-2xl hover:bg-blue-100 hover:shadow-md transition group text-center border border-blue-100">
-              <span className="text-3xl">{cat.icon}</span>
+              <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-[#1557A0] transition duration-300">
+                <CategoryIcon id={cat.id} className="w-7 h-7 text-slate-800 group-hover:text-white transition duration-300" strokeWidth={2.4} />
+              </div>
               <div>
                 <p className="text-sm font-bold text-slate-800 group-hover:text-[#1557A0] transition">{cat.name}</p>
                 <p className="text-[11px] text-slate-500 mt-0.5">{cat.description}</p>
