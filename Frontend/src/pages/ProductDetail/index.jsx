@@ -54,7 +54,7 @@ export const ProductDetailPage = () => {
           product.status === 'pending'
             ? 'bg-amber-50 border-amber-200 text-amber-900'
             : product.status === 'rejected'
-            ? 'bg-red-50 border-red-200 text-red-900'
+? 'bg-red-50 border-red-200 text-red-900'
             : 'bg-slate-50 border-slate-200 text-slate-700'
         }`}>
           <div className="flex items-center gap-2.5">
@@ -116,8 +116,7 @@ export const ProductDetailPage = () => {
               ))}
             </div>
           )}
-
-          {/* Description */}
+{/* Description */}
           <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-black text-slate-800">Mô tả sản phẩm</h3>
             <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">{product.description}</p>
@@ -170,7 +169,7 @@ export const ProductDetailPage = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-xl font-black text-slate-900 leading-snug">{product.title}</h1>
+<h1 className="text-xl font-black text-slate-900 leading-snug">{product.title}</h1>
 
           {/* Price */}
           <div>
@@ -226,7 +225,7 @@ export const ProductDetailPage = () => {
               )}
               <div>
                 <div className="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
-                  {product.seller?.name}
+{product.seller?.name}
                   {product.seller?.verified && <ShieldCheck className="w-4 h-4 text-emerald-600" />}
                 </div>
                 <p className="text-xs text-slate-500">{product.seller?.school}</p>

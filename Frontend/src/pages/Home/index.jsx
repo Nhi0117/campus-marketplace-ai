@@ -56,7 +56,7 @@ export const HomePage = () => {
             </form>
 
             {/* Quick tags */}
-            <div className="flex items-center gap-2 flex-wrap text-xs">
+<div className="flex items-center gap-2 flex-wrap text-xs">
               <span className="text-slate-500">Gợi ý nhanh:</span>
               {QUICK_TAGS.map(tag => (
                 <button key={tag} onClick={() => navigate(`/products?q=${encodeURIComponent(tag)}`)}
@@ -107,7 +107,7 @@ export const HomePage = () => {
       </section>
 
       {/* ─── CATEGORIES ───────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-xl font-black text-slate-900">Danh mục</h2>
           <Link to="/products" className="text-xs font-semibold text-[#1557A0] flex items-center gap-1 hover:underline">
@@ -196,7 +196,7 @@ export const HomePage = () => {
             <h3 className="text-xl font-black">Có đồ không dùng đến? Đăng tin ngay</h3>
             <p className="text-sm text-blue-200">Giúp các bạn khóa dưới tiết kiệm chi phí học tập và dọn dẹp phòng ký túc xá hôm nay.</p>
           </div>
-          <Link to="/create-listing"
+<Link to="/create-listing"
             className="shrink-0 px-6 py-3 bg-white text-[#1557A0] text-sm font-black rounded-xl hover:bg-blue-50 transition shadow flex items-center gap-2">
             + Đăng tin ngay
           </Link>

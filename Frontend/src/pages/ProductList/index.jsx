@@ -61,7 +61,7 @@ export const ProductListPage = () => {
         if (!txt.includes(query.toLowerCase())) return false;
       }
       if (category !== 'all' && p.categoryId !== category) return false;
-      if (school !== 'ALL' && p.schoolId !== school && p.schoolId !== 'ALL') return false;
+if (school !== 'ALL' && p.schoolId !== school && p.schoolId !== 'ALL') return false;
       if (activeLT.length  && !activeLT.includes(p.listingType)) return false;
       if (activeCond.length && !activeCond.includes(p.condition)) return false;
       if (priceFrom && p.price < Number(priceFrom)) return false;
@@ -121,7 +121,7 @@ export const ProductListPage = () => {
         </div>
 
         {/* Sort */}
-        <div className="flex items-center gap-2 text-xs text-slate-600">
+<div className="flex items-center gap-2 text-xs text-slate-600">
           <span className="font-semibold">Sắp xếp:</span>
           <select value={sortBy} onChange={e => setSortBy(e.target.value)}
             className="border border-slate-200 rounded-lg px-2.5 py-1.5 text-xs font-medium focus:outline-none bg-white">
@@ -176,7 +176,7 @@ export const ProductListPage = () => {
             {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
               <label key={cat.id} className="flex items-center gap-2 text-sm text-slate-600 cursor-pointer">
                 <input type="radio" name="category" checked={category === cat.id} onChange={() => setCategory(cat.id)}
-                  className="accent-[#1557A0]" />
+className="accent-[#1557A0]" />
                 {cat.name}
               </label>
             ))}
@@ -232,8 +232,7 @@ export const ProductListPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
                 {paginatedProducts.map(p => <ProductCard key={p.id} product={p} />)}
               </div>
-
-              {/* AI suggestion banner */}
+{/* AI suggestion banner */}
               {query && (
                 <div className="p-4 bg-blue-50 rounded-2xl border border-blue-100 flex items-start gap-3">
                   <div className="p-1.5 bg-[#1557A0] rounded-lg shrink-0">
