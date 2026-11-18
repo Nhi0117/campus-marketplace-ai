@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { PRODUCTS } from '../data/products';
 
-const STORAGE_KEY = 'campus_all_products';
+const STORAGE_KEY = 'campus_all_products_v3';
 const EVENT_KEY = 'campus_products_updated';
 
 export const useProducts = () => {
@@ -11,15 +11,26 @@ export const useProducts = () => {
       try {
         const parsed = JSON.parse(local);
         if (Array.isArray(parsed)) {
+          // Luôn đồng bộ lại ảnh mới nhất từ mã nguồn cho các sản phẩm mặc định
+          const defaultMap = new Map(PRODUCTS.map(p => [String(p.id), p]));
+          const updated = parsed.map(item => {
+            const def = defaultMap.get(String(item.id));
+            if (def) {
+              return {
+                ...def,
+                ...item,
+                images: def.images, // Đồng bộ đường dẫn ảnh nội bộ mới nhất
+              };
+            }
+            return item;
+          });
+
           // Bổ sung những sản phẩm mới trong code nếu localStorage chưa có
-          const existingIds = new Set(parsed.map(p => String(p.id)));
+          const existingIds = new Set(updated.map(p => String(p.id)));
           const missing = PRODUCTS.filter(p => !existingIds.has(String(p.id)));
-          if (missing.length > 0) {
-            const merged = [...parsed, ...missing];
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-            return merged;
-          }
-          return parsed;
+          const merged = missing.length > 0 ? [...updated, ...missing] : updated;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
+          return merged;
         }
       } catch (e) {
         return PRODUCTS;

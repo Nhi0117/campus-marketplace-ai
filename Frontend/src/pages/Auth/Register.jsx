@@ -212,7 +212,7 @@ export const RegisterPage = () => {
                     <option value="Đại học Quốc Tế">Đại học Quốc Tế (IU)</option>
                     <option value="Trường Đại học Khoa học Sức khỏe">Trường Đại học Khoa học Sức khỏe (UHS)</option>
                     <option value="Đại học An Giang">Đại học An Giang (AGU)</option>
-                    <option value="Khác">Khác (Trường ngoài hệ thống ĐHQG-HCM)</option>
+                    <option value="Khác">Khác</option>
                   </select>
 
                   {schoolName === 'Khác' && (
