@@ -46,8 +46,8 @@ export const Layout = () => {
 
       <Footer />
 
-      {/* Floating AI Chatbot Widget (AI01) */}
-      <AIChatbot />
+      {/* Floating AI Chatbot Widget (chỉ hiển thị sau khi đã vào web, không hiện ở trang chờ splash) */}
+      {!showSplash && <AIChatbot />}
     </div>
   );
 };

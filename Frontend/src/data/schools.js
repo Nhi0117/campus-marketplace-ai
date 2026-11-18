@@ -68,8 +68,8 @@ export const SCHOOLS = [
   {
     id: 'OTHER',
     code: 'KHAC',
-    name: 'Khác (Trường ngoài ĐHQG-HCM)',
-    shortName: 'Trường khác',
+    name: 'Khác',
+    shortName: 'Khác',
     location: 'Ngoài ĐHQG-HCM'
   }
 ];

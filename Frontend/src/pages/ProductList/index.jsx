@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { RotateCcw, ChevronDown, Sparkles } from 'lucide-react';
+import { RotateCcw, ChevronDown, Sparkles, ArrowLeft, ArrowRight } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
 import { CATEGORIES } from '../../data/categories';
 import { SCHOOLS } from '../../data/schools';
@@ -42,9 +42,14 @@ export const ProductListPage = () => {
     if (lt)  setListingTypes(prev => ({ ...prev, [lt]: true }));
   }, [searchParams]);
 
-  // Active filter chips
-  const activeLT  = Object.entries(listingTypes).filter(([, v]) => v).map(([k]) => k);
-  const activeCond = Object.entries(conditions).filter(([, v]) => v).map(([k]) => k);
+  // Active filter chips (dùng useMemo để không tạo lại mảng mới mỗi lần render)
+  const activeLT = useMemo(() => {
+    return Object.entries(listingTypes).filter(([, v]) => v).map(([k]) => k);
+  }, [listingTypes]);
+
+  const activeCond = useMemo(() => {
+    return Object.entries(conditions).filter(([, v]) => v).map(([k]) => k);
+  }, [conditions]);
 
   const filtered = useMemo(() => {
     return products.filter(p => {
@@ -69,10 +74,10 @@ export const ProductListPage = () => {
     });
   }, [products, query, category, school, activeLT, activeCond, priceFrom, priceTo, sortBy]);
 
-  // Tự động quay về trang 1 khi thay đổi điều kiện lọc
+  // Chỉ quay về trang 1 khi người dùng thay đổi bộ lọc tìm kiếm
   useEffect(() => {
     setCurrentPage(1);
-  }, [query, category, school, activeLT, activeCond, priceFrom, priceTo, sortBy]);
+  }, [query, category, school, listingTypes, conditions, priceFrom, priceTo, sortBy]);
 
   const totalPages = Math.ceil(filtered.length / ITEMS_PER_PAGE) || 1;
   const paginatedProducts = filtered.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -254,14 +259,16 @@ export const ProductListPage = () => {
                   Hiển thị {(currentPage - 1) * ITEMS_PER_PAGE + 1} - {Math.min(currentPage * ITEMS_PER_PAGE, filtered.length)} trên tổng số {filtered.length} sản phẩm
                 </span>
 
-                <div className="flex items-center gap-1">
+                <div className="flex items-center gap-1.5">
                   <button
                     type="button"
                     onClick={() => handlePageChange(currentPage - 1)}
                     disabled={currentPage === 1}
-                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white border border-slate-200 hover:border-[#1557A0] rounded-xl text-xs font-bold text-slate-700 hover:text-[#1557A0] shadow-xs transition-all disabled:opacity-30 disabled:pointer-events-none group"
+                    title="Về trang trước"
                   >
-                    ‹ Trước
+                    <ArrowLeft className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#1557A0] group-hover:-translate-x-0.5 transition-transform" />
+                    <span>Trang trước</span>
                   </button>
 
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
@@ -269,10 +276,10 @@ export const ProductListPage = () => {
                       key={pageNumber}
                       type="button"
                       onClick={() => handlePageChange(pageNumber)}
-                      className={`w-8 h-8 rounded-lg text-xs font-bold transition-all ${
+                      className={`w-9 h-9 rounded-xl text-xs font-black transition-all ${
                         currentPage === pageNumber
-                          ? 'bg-[#1557A0] text-white shadow-xs'
-                          : 'border border-slate-200 text-slate-700 hover:bg-slate-50'
+                          ? 'bg-[#1557A0] text-white shadow-md shadow-blue-500/25 scale-105'
+                          : 'bg-white border border-slate-200 text-slate-700 hover:border-[#1557A0] hover:text-[#1557A0] hover:bg-blue-50/50'
                       }`}
                     >
                       {pageNumber}
@@ -283,9 +290,11 @@ export const ProductListPage = () => {
                     type="button"
                     onClick={() => handlePageChange(currentPage + 1)}
                     disabled={currentPage === totalPages}
-                    className="px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-semibold text-slate-600 hover:bg-slate-50 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white border border-slate-200 hover:border-[#1557A0] rounded-xl text-xs font-bold text-slate-700 hover:text-[#1557A0] shadow-xs transition-all disabled:opacity-30 disabled:pointer-events-none group"
+                    title="Sang trang sau"
                   >
-                    Sau ›
+                    <span>Trang sau</span>
+                    <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-[#1557A0] group-hover:translate-x-0.5 transition-transform" />
                   </button>
                 </div>
               </div>

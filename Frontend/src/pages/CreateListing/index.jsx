@@ -34,6 +34,7 @@ export const CreateListingPage = () => {
   const [aiHighlight, setAiHighlight] = useState('');
   const [aiDraft,     setAiDraft]     = useState('');
   const [submittedNotice, setSubmittedNotice] = useState(false);
+  const [draftNotice, setDraftNotice] = useState(false);
 
   const set = (name, value) => setForm(prev => ({ ...prev, [name]: value }));
 
@@ -139,6 +140,52 @@ export const CreateListingPage = () => {
     });
 
     setSubmittedNotice(true);
+    setTimeout(() => {
+      setLoading(false);
+      navigate('/manage-listings');
+    }, 1200);
+  };
+
+  const handleSaveDraft = (e) => {
+    e?.preventDefault();
+    if (!form.title.trim()) {
+      alert('Vui lòng nhập tên sản phẩm trước khi lưu bản nháp!');
+      return;
+    }
+    setLoading(true);
+
+    const school = SCHOOLS.find(s => s.id === form.schoolId) || SCHOOLS[1];
+    const finalImages = uploadedImages.length > 0 
+      ? uploadedImages 
+      : (form.imageUrl ? [form.imageUrl] : ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80']);
+
+    addProduct({
+      ...form,
+      price: form.listingType === 'sell' ? (Number(form.price) || 0) : 0,
+      schoolName: school.shortName,
+      location: `KTX / ${school.name}`,
+      images: finalImages,
+      tags: form.tags ? form.tags.split(',').map(t => t.trim()).filter(Boolean) : ['bản nháp', 'học liệu'],
+      detailInfo: {
+        listingType: LISTING_TYPES.find(t => t.id === form.listingType)?.label || 'Bán',
+        category: CATEGORIES.find(c => c.id === form.categoryId)?.name || 'Học liệu',
+        condition: form.condition,
+        postedDate: new Date().toLocaleDateString('vi-VN'),
+        meetingPoint: 'Trực tiếp tại Làng Đại học / KTX',
+      },
+      status: 'need_edit', // Lưu vào mục "Cần chỉnh sửa" (Bản nháp) - chưa gửi admin duyệt
+      seller: { 
+        id: user?.id || 'guest', 
+        name: user?.name || user?.shortName || 'Sinh viên', 
+        school: user?.schoolName || school.shortName, 
+        rating: 5.0, 
+        reviewCount: 0, 
+        avatar: user?.avatar || null, 
+        verified: user?.verifiedStudent ?? true 
+      },
+    });
+
+    setDraftNotice(true);
     setTimeout(() => {
       setLoading(false);
       navigate('/manage-listings');
@@ -319,12 +366,20 @@ export const CreateListingPage = () => {
               </div>
             )}
 
+            {/* Thông báo lưu bản nháp thành công */}
+            {draftNotice && (
+              <div className="p-4 rounded-xl bg-amber-50 border border-amber-300 text-xs font-bold text-amber-900 flex items-center gap-2.5 shadow-xs animate-pulse">
+                <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0" />
+                <span>Đã lưu bản nháp thành công! Tin được lưu tại mục "Cần chỉnh sửa" trong Tin đăng của tôi và chưa gửi cho Admin duyệt. Đang chuyển hướng...</span>
+              </div>
+            )}
+
             {/* Footer buttons */}
             <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
               <Button variant="campus" size="md" type="submit" loading={loading} className="flex-1">
                 Gửi duyệt
               </Button>
-              <Button variant="outline" size="md" type="button" onClick={() => navigate('/manage-listings')}>
+              <Button variant="outline" size="md" type="button" onClick={handleSaveDraft} disabled={loading}>
                 Lưu bản nháp
               </Button>
             </div>
