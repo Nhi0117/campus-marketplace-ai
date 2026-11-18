@@ -6,6 +6,7 @@ export const CATEGORIES = [
   {
     id: 'all',
     name: 'Tất cả danh mục',
+    iconName: 'LayoutGrid',
     icon: '📦',
     description: '',
     color: 'bg-slate-100 text-slate-700'
@@ -13,6 +14,7 @@ export const CATEGORIES = [
   {
     id: 'hoc-lieu',
     name: 'Học liệu',
+    iconName: 'BookOpen',
     icon: '📚',
     description: 'Giáo trình, tài liệu ôn thi',
     color: 'bg-blue-50 text-blue-700'
@@ -20,6 +22,7 @@ export const CATEGORIES = [
   {
     id: 'do-dung-hoc-tap',
     name: 'Đồ dùng học tập',
+    iconName: 'PencilRuler',
     icon: '✏️',
     description: 'Bút vẽ kỹ thuật, thước kẻ',
     color: 'bg-indigo-50 text-indigo-700'
@@ -27,6 +30,7 @@ export const CATEGORIES = [
   {
     id: 'thiet-bi-hoc-tap',
     name: 'Thiết bị học tập',
+    iconName: 'Laptop',
     icon: '💻',
     description: 'Máy tính bỏ túi, tai nghe, laptop',
     color: 'bg-violet-50 text-violet-700'
@@ -34,6 +38,7 @@ export const CATEGORIES = [
   {
     id: 'vat-dung-sinh-vien',
     name: 'Vật dụng sinh viên',
+    iconName: 'Lamp',
     icon: '🏠',
     description: 'Đèn học, quạt mini, đồ điện',
     color: 'bg-sky-50 text-sky-700'
