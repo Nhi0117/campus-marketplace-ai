@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Mail, Phone } from 'lucide-react';
+import { getImageUrl } from '../../utils/format';
 
 export const Footer = () => (
   <footer className="bg-[#EBF4FF] border-t border-blue-200/60 mt-16 text-slate-700">
@@ -11,7 +12,7 @@ export const Footer = () => (
         <div className="space-y-3.5">
           <Link to="/" className="inline-block">
             <img
-              src="/logo.svg"
+              src={getImageUrl('/logo.svg')}
               alt="Campus Marketplace AI"
               className="h-10 w-auto object-contain"
             />

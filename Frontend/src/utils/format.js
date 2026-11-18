@@ -37,3 +37,17 @@ export const formatTimeAgo = (dateString) => {
 export const cn = (...classes) => {
   return classes.filter(Boolean).join(' ');
 };
+
+/**
+ * Chuẩn hóa URL ảnh tĩnh phù hợp cho cả Localhost và GitHub Pages subpath
+ */
+export const getImageUrl = (url) => {
+  if (!url) return '';
+  if (url.startsWith('http://') || url.startsWith('https://') || url.startsWith('data:')) {
+    return url;
+  }
+  const cleanPath = url.startsWith('/') ? url.slice(1) : url;
+  const base = import.meta.env.BASE_URL || '/';
+  return base.endsWith('/') ? `${base}${cleanPath}` : `${base}/${cleanPath}`;
+};
+

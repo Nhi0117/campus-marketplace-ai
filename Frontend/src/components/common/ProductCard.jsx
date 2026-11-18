@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Heart, MapPin, Star, User, Clock } from 'lucide-react';
-import { formatCurrency, formatTimeAgo } from '../../utils/format';
+import { formatCurrency, formatTimeAgo, getImageUrl } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 
 // Badge loại tin
@@ -45,13 +45,13 @@ export const ProductCard = ({ product }) => {
       {/* Image */}
       <Link to={`/products/${product.id}`} className="relative aspect-[4/3] block overflow-hidden bg-slate-100 shrink-0">
         <img
-          src={product.images && product.images[0] ? encodeURI(product.images[0]) : '/favicon.svg'}
+          src={product.images && product.images[0] ? encodeURI(getImageUrl(product.images[0])) : getImageUrl('/favicon.svg')}
           alt={product.title}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           loading="lazy"
           onError={(e) => {
             e.target.onerror = null;
-            e.target.src = '/image/products/gt_kinh_te_vi_mo.jfif';
+            e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
           }}
         />
 

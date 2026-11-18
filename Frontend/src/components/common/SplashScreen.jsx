@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { getImageUrl } from '../../utils/format';
 
 export const SplashScreen = ({ onFinish }) => {
   const [fadeOut, setFadeOut] = useState(false);
@@ -29,7 +30,7 @@ export const SplashScreen = ({ onFinish }) => {
       {/* Trung tâm: Logo đầy đủ */}
       <div className="flex flex-col items-center justify-center text-center animate-fade-in">
         <img
-          src="/logo.svg"
+          src={getImageUrl('/logo.svg')}
           alt="Campus Marketplace AI"
           className="h-24 sm:h-32 md:h-40 w-auto object-contain drop-shadow-sm mb-4"
         />

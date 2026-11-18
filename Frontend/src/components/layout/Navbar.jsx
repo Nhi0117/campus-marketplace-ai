@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Button } from '../common/Button';
 import { CATEGORIES } from '../../data/categories';
 import { CategoryIcon } from '../common/CategoryIcon';
+import { getImageUrl } from '../../utils/format';
 
 const MOCK_NOTIFICATIONS = [
   {
@@ -79,7 +80,7 @@ export const Navbar = () => {
             {/* Logo chuẩn Figma */}
             <Link to="/" className="flex items-center shrink-0">
               <img
-                src="/logo.svg"
+                src={getImageUrl('/logo.svg')}
                 alt="Campus Marketplace AI"
                 className="h-10 sm:h-11 w-auto object-contain"
               />

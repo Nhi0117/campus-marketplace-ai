@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { CheckSquare, Flag, Users, Settings, LogOut, ShieldCheck, GraduationCap } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { getImageUrl } from '../../utils/format';
 
 export const AdminSidebar = ({ activeTab = 'listings' }) => {
   const { logout } = useAuth();
@@ -24,7 +25,7 @@ export const AdminSidebar = ({ activeTab = 'listings' }) => {
       <div className="p-4 space-y-6">
         {/* Logo Admin */}
         <Link to="/admin" className="block px-2">
-          <img src="/logo.svg" alt="Campus Marketplace" className="h-9 w-auto object-contain mb-1" />
+          <img src={getImageUrl('/logo.svg')} alt="Campus Marketplace" className="h-9 w-auto object-contain mb-1" />
           <span className="text-[10px] text-slate-400 font-semibold uppercase tracking-wider block">Khu vực Quản Trị ĐHQG</span>
         </Link>
 
