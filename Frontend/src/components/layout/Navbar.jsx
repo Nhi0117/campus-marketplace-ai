@@ -52,7 +52,7 @@ export const Navbar = () => {
   const handleSearch = (e) => {
     e.preventDefault();
     if (searchTerm.trim()) {
-      navigate(/products?q=${encodeURIComponent(searchTerm.trim())});
+      navigate(`/products?q=${encodeURIComponent(searchTerm.trim())}`);
       setSearchTerm('');
     }
   };
