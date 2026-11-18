@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Outlet, Link, useNavigate } from 'react-router-dom';
 import { ShieldCheck, LogOut, ExternalLink, GraduationCap, Bell } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -7,6 +7,21 @@ import { AdminSidebar } from '../../pages/Admin/AdminSidebar';
 export const AdminLayout = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
+
+  // Kiểm tra quyền Quản trị viên: Nếu chưa đăng nhập hoặc không phải Admin nhóm -> Chặn và đẩy về trang đăng nhập
+  useEffect(() => {
+    if (!user || !user.isAdmin) {
+      navigate('/login?role=admin&unauthorized=true', { replace: true });
+    }
+  }, [user, navigate]);
+
+  if (!user || !user.isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-500 text-sm">
+        Đang kiểm tra quyền quản trị viên...
+      </div>
+    );
+  }
 
   const handleLogout = () => {
     logout();

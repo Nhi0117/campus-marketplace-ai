@@ -70,13 +70,15 @@ export const AuthProvider = ({ children }) => {
       };
     }
 
-    // Kiểm tra mật khẩu chính xác
-    const expectedPassword = found.password || '12345678';
+    // Kiểm tra mật khẩu chính xác (Tài khoản Admin yêu cầu mật khẩu bảo mật riêng của nhóm)
+    const expectedPassword = found.isAdmin ? (found.password || 'VNUHCM@Admin2026') : (found.password || '12345678');
     if (!password || password !== expectedPassword) {
       return {
         success: false,
         error: 'WRONG_PASSWORD',
-        message: 'Mật khẩu không chính xác. Vui lòng kiểm tra lại!'
+        message: found.isAdmin
+          ? 'Mật khẩu quản trị viên không chính xác. Khu vực này chỉ dành riêng cho 5 thành viên Ban Quản Trị nhóm!'
+          : 'Mật khẩu không chính xác. Vui lòng kiểm tra lại!'
       };
     }
 

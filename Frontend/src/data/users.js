@@ -114,9 +114,10 @@ export const USERS = [
   },
   {
     id: 'admin',
-    name: 'Ban Quản Trị ĐHQG-HCM',
-    shortName: 'Admin',
+    name: 'Ban Quản Trị ĐHQG-HCM (Nhóm Dự Án)',
+    shortName: 'Admin Nhóm',
     email: 'admin@vnuhcm.edu.vn',
+    password: 'VNUHCM@Admin2026',
     studentId: 'ADMIN001',
     schoolId: 'VNU',
     schoolName: 'ĐHQG-HCM',

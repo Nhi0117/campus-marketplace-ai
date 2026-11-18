@@ -12,13 +12,15 @@ export const LoginPage = () => {
   const registeredSuccess = searchParams.get('registered') === 'success';
   const queryEmail = searchParams.get('email') || '';
 
+  const isUnauthorized = searchParams.get('unauthorized') === 'true';
+
   const [loginRole, setLoginRole] = useState(
     searchParams.get('role') === 'admin' ? 'admin' : 'student'
   );
   const [email, setEmail] = useState(searchParams.get('role') === 'admin' ? 'admin@vnuhcm.edu.vn' : queryEmail);
-  const [password, setPassword] = useState(searchParams.get('role') === 'admin' ? '12345678' : '');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState(isUnauthorized ? 'Khu vực này yêu cầu đăng nhập bằng tài khoản Quản trị viên dự án.' : '');
   const [needRegister, setNeedRegister] = useState(false);
   const [loading, setLoading] = useState(false);
   const [justRegistered, setJustRegistered] = useState(registeredSuccess);
@@ -38,7 +40,7 @@ export const LoginPage = () => {
     setNeedRegister(false);
     if (role === 'admin') {
       setEmail('admin@vnuhcm.edu.vn');
-      setPassword('12345678');
+      setPassword(''); // Bắt buộc tự gõ mật khẩu bí mật của nhóm
     } else {
       setEmail('');
       setPassword('');
@@ -319,22 +321,16 @@ export const LoginPage = () => {
               {/* Quick Login Demo */}
               <div className="mt-6 pt-5 border-t border-slate-100 space-y-2">
                 <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Tài khoản có sẵn trong hệ thống (Demo)
+                  Tài khoản sinh viên trải nghiệm (Demo)
                 </p>
-                <div className="grid grid-cols-2 gap-2">
+                <div>
                   <button
                     type="button"
                     onClick={() => handleDemoLogin('minhanh@uel.edu.vn')}
-                    className="px-3 py-2 rounded-lg border border-slate-200 hover:border-[#1557A0] hover:bg-blue-50/50 text-xs font-medium text-slate-700 text-left transition-colors"
+                    className="w-full px-3 py-2 rounded-lg border border-slate-200 hover:border-[#1557A0] hover:bg-blue-50/50 text-xs font-medium text-slate-700 text-left transition-colors flex items-center justify-between"
                   >
-                    👤 Minh Anh (ĐH Kinh tế - Luật)
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDemoLogin('admin@vnuhcm.edu.vn')}
-                    className="px-3 py-2 rounded-lg border border-slate-200 hover:border-[#1557A0] hover:bg-blue-50/50 text-xs font-medium text-slate-700 text-left transition-colors"
-                  >
-                    🛡️ Admin ĐHQG
+                    <span>👤 Minh Anh (ĐH Kinh tế - Luật)</span>
+                    <span className="text-[10px] text-slate-400">Đăng nhập thử 1 chạm →</span>
                   </button>
                 </div>
               </div>
