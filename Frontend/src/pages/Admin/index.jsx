@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CheckSquare, XCircle, CheckCircle2, Clock, Eye, AlertCircle, Sparkles, Filter, ChevronRight, Check } from 'lucide-react';
-import { formatCurrency, formatTimeAgo } from '../../utils/format';
+import { CheckSquare, XCircle, CheckCircle2, Clock, Eye, AlertCircle, Sparkles, Filter, ChevronRight, Check, Image as ImageIcon } from 'lucide-react';
+import { formatCurrency, formatTimeAgo, getImageUrl } from '../../utils/format';
 import { AdminSidebar } from './AdminSidebar';
 import { useProducts } from '../../hooks/useProducts';
 
@@ -162,8 +162,20 @@ export const AdminPage = () => {
                         : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'
                     }`}
                   >
-                    <div className="w-14 h-14 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-200">
-                      <img src={p.images?.[0]} alt={p.title} className="w-full h-full object-cover" />
+                    <div className="w-14 h-14 rounded-lg bg-slate-100 overflow-hidden shrink-0 border border-slate-200 flex items-center justify-center">
+                      {p.images && p.images.length > 0 && p.images[0] ? (
+                        <img
+                          src={encodeURI(getImageUrl(p.images[0]))}
+                          alt={p.title}
+                          className="w-full h-full object-cover"
+                          onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+                          }}
+                        />
+                      ) : (
+                        <ImageIcon className="w-5 h-5 text-slate-300" />
+                      )}
                     </div>
 
                     <div className="flex-1 min-w-0">
@@ -232,11 +244,26 @@ export const AdminPage = () => {
                 <div>
                   <span className="text-xs font-bold text-slate-700 block mb-2">Hình ảnh tải lên</span>
                   <div className="grid grid-cols-3 gap-3">
-                    {selectedProduct.images?.map((img, i) => (
-                      <div key={i} className="aspect-video rounded-xl overflow-hidden border border-slate-200">
-                        <img src={img} alt="Detail" className="w-full h-full object-cover" />
+                    {selectedProduct.images && selectedProduct.images.length > 0 ? (
+                      selectedProduct.images.map((img, i) => (
+                        <div key={i} className="aspect-video rounded-xl overflow-hidden border border-slate-200">
+                          <img
+                            src={encodeURI(getImageUrl(img))}
+                            alt={`Detail ${i}`}
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              e.target.onerror = null;
+                              e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+                            }}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                      <div className="col-span-3 py-6 rounded-xl border border-dashed border-slate-200 bg-slate-50 flex flex-col items-center justify-center text-slate-400 gap-1.5">
+                        <ImageIcon className="w-6 h-6 text-slate-300" />
+                        <span className="text-xs">Người bán không tải lên ảnh chụp</span>
                       </div>
-                    ))}
+                    )}
                   </div>
                 </div>
 

@@ -3,7 +3,7 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { useProducts } from '../../hooks/useProducts';
 import { useAuth } from '../../context/AuthContext';
 import { formatCurrency, formatTimeAgo, getImageUrl } from '../../utils/format';
-import { Heart, Share2, MessageCircle, Star, ShieldCheck, AlertCircle, ArrowLeft, MapPin, Flag } from 'lucide-react';
+import { Heart, Share2, MessageCircle, Star, ShieldCheck, AlertCircle, ArrowLeft, MapPin, Flag, Image as ImageIcon } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 import { AIRecommendation } from '../../components/ai/AIRecommendation';
 
@@ -82,19 +82,28 @@ export const ProductDetailPage = () => {
         {/* ── Left: Images + Description ── */}
         <div className="lg:col-span-7 space-y-5">
           {/* Main Image */}
-          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
-            <img
-              src={encodeURI(getImageUrl(product.images[activeImg] || product.images[0] || '/favicon.svg'))}
-              alt={product.title}
-              className="w-full h-full object-cover"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
-              }}
-            />
-            <span className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
-              {activeImg + 1}/{product.images.length}
-            </span>
+          <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 flex items-center justify-center">
+            {product.images && product.images.length > 0 && product.images[activeImg] ? (
+              <>
+                <img
+                  src={encodeURI(getImageUrl(product.images[activeImg]))}
+                  alt={product.title}
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+                  }}
+                />
+                <span className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
+                  {activeImg + 1}/{product.images.length}
+                </span>
+              </>
+            ) : (
+              <div className="flex flex-col items-center justify-center text-slate-400 gap-2">
+                <ImageIcon className="w-12 h-12 text-slate-300" />
+                <span className="text-sm font-medium">Người bán không tải lên hình ảnh</span>
+              </div>
+            )}
           </div>
 
           {/* Thumbnails */}

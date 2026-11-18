@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useProducts } from '../../hooks/useProducts';
-import { formatCurrency, formatTimeAgo } from '../../utils/format';
-import { ShieldCheck, Star, Edit, Eye, EyeOff, Trash2, RefreshCw, Sparkles, ChevronLeft, ChevronRight } from 'lucide-react';
+import { formatCurrency, formatTimeAgo, getImageUrl } from '../../utils/format';
+import { ShieldCheck, Star, Edit, Eye, EyeOff, Trash2, RefreshCw, Sparkles, ChevronLeft, ChevronRight, Image as ImageIcon } from 'lucide-react';
 import { Button } from '../../components/common/Button';
 import { ProfileSidebar } from './ProfileSidebar';
 
@@ -153,7 +153,22 @@ export const ManageListingsPage = () => {
                         <td className="px-4 py-3">
                           <div className="flex items-center gap-3">
                             <Link to={`/products/${prod.id}`} className="shrink-0 group">
-                              <img src={prod.images[0]} alt="" className="w-14 h-12 rounded-xl object-cover border border-slate-200 group-hover:opacity-90 transition" />
+                              {prod.images && prod.images.length > 0 && prod.images[0] ? (
+                                <img
+                                  src={encodeURI(getImageUrl(prod.images[0]))}
+                                  alt=""
+                                  className="w-14 h-12 rounded-xl object-cover border border-slate-200 group-hover:opacity-90 transition"
+                                  onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+                                  }}
+                                />
+                              ) : (
+                                <div className="w-14 h-12 rounded-xl bg-slate-100 flex flex-col items-center justify-center text-slate-400 border border-slate-200">
+                                  <ImageIcon className="w-4 h-4 text-slate-300" />
+                                  <span className="text-[8px] font-medium text-slate-400 mt-0.5">Không ảnh</span>
+                                </div>
+                              )}
                             </Link>
                             <div className="min-w-0">
                               <Link to={`/products/${prod.id}`} className="font-bold text-slate-800 line-clamp-2 leading-snug hover:text-[#1557A0] transition">

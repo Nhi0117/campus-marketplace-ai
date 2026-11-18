@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Sparkles, X, Send, Bot, User, ArrowRight, CornerDownLeft } from 'lucide-react';
+import { Sparkles, X, Send, Bot, User, ArrowRight, CornerDownLeft, Image as ImageIcon } from 'lucide-react';
 import { chatWithAI } from '../../services/ai.service';
-import { formatCurrency } from '../../utils/format';
+import { formatCurrency, getImageUrl } from '../../utils/format';
 import { Link } from 'react-router-dom';
 
 export const AIChatbot = () => {
@@ -150,11 +150,21 @@ export const AIChatbot = () => {
                           onClick={() => setIsOpen(false)}
                           className="flex items-center gap-2.5 p-2 bg-white rounded-xl border border-slate-200/80 hover:border-blue-400 hover:shadow-md transition text-left group"
                         >
-                          <img
-                            src={prod.images[0]}
-                            alt={prod.title}
-                            className="w-12 h-12 rounded-lg object-cover shrink-0"
-                          />
+                          <div className="w-12 h-12 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                            {prod.images && prod.images.length > 0 && prod.images[0] ? (
+                              <img
+                                src={encodeURI(getImageUrl(prod.images[0]))}
+                                alt={prod.title}
+                                className="w-full h-full object-cover"
+                                onError={(e) => {
+                                  e.target.onerror = null;
+                                  e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+                                }}
+                              />
+                            ) : (
+                              <ImageIcon className="w-5 h-5 text-slate-300" />
+                            )}
+                          </div>
                           <div className="flex-1 min-w-0">
                             <h4 className="text-[11px] font-bold text-slate-800 truncate group-hover:text-blue-600">
                               {prod.title}

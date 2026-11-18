@@ -11,7 +11,7 @@ export const ProfileSidebar = ({ activeTab = 'settings' }) => {
     { id: 'settings', label: 'Hồ sơ cá nhân', path: '/settings', icon: User },
     { id: 'manage-listings', label: 'Tin đăng của tôi', path: '/manage-listings', icon: ListFilter },
     { id: 'saved', label: 'Danh sách đã lưu', path: '/saved', icon: Bookmark },
-    { id: 'chat', label: 'Hộp thư & Trao đổi', path: '/chat', icon: MessageSquare, badge: 3 },
+    { id: 'chat', label: 'Hộp thư & Trao đổi', path: '/chat', icon: MessageSquare },
     { id: 'transactions', label: 'Lịch sử giao dịch', path: '/transactions', icon: History },
   ];
 

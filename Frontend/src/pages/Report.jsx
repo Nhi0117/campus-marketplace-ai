@@ -1,12 +1,22 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { AlertCircle, Upload, CheckCircle2, Laptop } from 'lucide-react';
+import { AlertCircle, Upload, CheckCircle2, Image as ImageIcon } from 'lucide-react';
 import { PRODUCTS } from '../data/products';
-import { formatCurrency } from '../utils/format';
+import { formatCurrency, getImageUrl } from '../utils/format';
+import { useAuth } from '../context/AuthContext';
+
+const REASONS = [
+  { id: 'wrong_category', label: 'Nội dung không phù hợp hoặc sai danh mục' },
+  { id: 'copyright', label: 'Hàng bị cấm hoặc vi phạm bản quyền' },
+  { id: 'misleading', label: 'Mô tả không đúng thực tế hoặc che giấu khiếm khuyết' },
+  { id: 'scam', label: 'Nghi ngờ lừa đảo' },
+  { id: 'other', label: 'Lý do khác' },
+];
 
 export const ReportPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const product = PRODUCTS.find(p => p.id === id) || PRODUCTS[10] || PRODUCTS[0];
 
@@ -16,6 +26,38 @@ export const ReportPage = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const reasonObj = REASONS.find(r => r.id === reason);
+    const newReport = {
+      id: `#${Math.floor(100 + Math.random() * 900)}`,
+      targetType: 'Tin đăng',
+      targetTitle: product.title,
+      targetId: product.id,
+      reason: reasonObj ? reasonObj.label : 'Lý do khác',
+      description: description.trim(),
+      reporter: user?.name || 'Sinh viên ĐHQG',
+      date: new Date().toLocaleDateString('vi-VN'),
+      time: new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
+      status: 'new',
+      statusText: 'Mới gửi',
+      statusBadge: 'bg-amber-50 text-amber-700 border border-amber-200',
+      hasActionBtn: true,
+      product: {
+        id: product.id,
+        title: product.title,
+        price: product.price,
+        condition: product.condition,
+        seller: product.seller?.name || 'Người bán',
+        images: product.images || [],
+      }
+    };
+
+    try {
+      const existing = JSON.parse(localStorage.getItem('campus_reports_list') || '[]');
+      localStorage.setItem('campus_reports_list', JSON.stringify([newReport, ...existing]));
+    } catch (err) {
+      console.error(err);
+    }
+
     setSubmitted(true);
     setTimeout(() => {
       navigate(-1);
@@ -46,8 +88,20 @@ export const ReportPage = () => {
           <span className="text-xs text-slate-400 block mb-2 font-medium">Bạn đang báo cáo tin đăng:</span>
           <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between gap-4">
             <div className="flex items-center gap-3 min-w-0">
-              <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center text-slate-700 shrink-0 text-xl font-bold">
-                💻
+              <div className="w-14 h-14 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                {product.images && product.images.length > 0 && product.images[0] ? (
+                  <img
+                    src={encodeURI(getImageUrl(product.images[0]))}
+                    alt={product.title}
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+                    }}
+                  />
+                ) : (
+                  <ImageIcon className="w-6 h-6 text-slate-300" />
+                )}
               </div>
               <div className="min-w-0">
                 <div className="flex items-center gap-2 mb-0.5">
@@ -75,13 +129,7 @@ export const ReportPage = () => {
             Lý do báo cáo <span className="text-red-500">*</span>
           </label>
           <div className="space-y-2.5">
-            {[
-              { id: 'wrong_category', label: 'Nội dung không phù hợp hoặc sai danh mục' },
-              { id: 'copyright', label: 'Hàng bị cấm hoặc vi phạm bản quyền' },
-              { id: 'misleading', label: 'Mô tả không đúng thực tế hoặc che giấu khiếm khuyết' },
-              { id: 'scam', label: 'Nghi ngờ lừa đảo' },
-              { id: 'other', label: 'Lý do khác' },
-            ].map((item) => (
+            {REASONS.map((item) => (
               <label
                 key={item.id}
                 className={`p-3.5 rounded-xl border flex items-center gap-3 cursor-pointer text-xs transition-all ${

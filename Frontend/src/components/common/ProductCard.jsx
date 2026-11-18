@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Heart, MapPin, Star, User, Clock } from 'lucide-react';
+import { Heart, MapPin, Star, User, Clock, Image as ImageIcon } from 'lucide-react';
 import { formatCurrency, formatTimeAgo, getImageUrl } from '../../utils/format';
 import { useAuth } from '../../context/AuthContext';
 
@@ -44,16 +44,23 @@ export const ProductCard = ({ product }) => {
     <div className="group bg-white rounded-2xl border border-slate-200/80 shadow-sm hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col">
       {/* Image */}
       <Link to={`/products/${product.id}`} className="relative aspect-[4/3] block overflow-hidden bg-slate-100 shrink-0">
-        <img
-          src={product.images && product.images[0] ? encodeURI(getImageUrl(product.images[0])) : getImageUrl('/favicon.svg')}
-          alt={product.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-          loading="lazy"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
-          }}
-        />
+        {product.images && product.images.length > 0 && product.images[0] ? (
+          <img
+            src={encodeURI(getImageUrl(product.images[0]))}
+            alt={product.title}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            loading="lazy"
+            onError={(e) => {
+              e.target.onerror = null;
+              e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+            }}
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-slate-50 text-slate-400 gap-1.5 p-4 text-center">
+            <ImageIcon className="w-9 h-9 text-slate-300" strokeWidth={1.5} />
+            <span className="text-[11px] font-medium text-slate-400">Chưa có hình ảnh</span>
+          </div>
+        )}
 
         {/* Badges top-left: loại tin + tình trạng */}
         <div className="absolute top-2.5 left-2.5 flex items-center gap-1.5 flex-wrap">

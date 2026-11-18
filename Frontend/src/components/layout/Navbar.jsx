@@ -236,7 +236,6 @@ export const Navbar = () => {
                     title="Hộp thư"
                   >
                     <MessageSquare className="w-5 h-5" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
                   </Link>
 
                   {/* Post listing button */}

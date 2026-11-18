@@ -111,7 +111,7 @@ export const CreateListingPage = () => {
     const school = SCHOOLS.find(s => s.id === form.schoolId) || SCHOOLS[1];
     const finalImages = uploadedImages.length > 0 
       ? uploadedImages 
-      : (form.imageUrl ? [form.imageUrl] : ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80']);
+      : (form.imageUrl ? [form.imageUrl] : []);
 
     const created = addProduct({
       ...form,
@@ -157,7 +157,7 @@ export const CreateListingPage = () => {
     const school = SCHOOLS.find(s => s.id === form.schoolId) || SCHOOLS[1];
     const finalImages = uploadedImages.length > 0 
       ? uploadedImages 
-      : (form.imageUrl ? [form.imageUrl] : ['https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?w=800&auto=format&fit=crop&q=80']);
+      : (form.imageUrl ? [form.imageUrl] : []);
 
     addProduct({
       ...form,

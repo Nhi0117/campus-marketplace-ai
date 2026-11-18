@@ -86,8 +86,22 @@ const MOCK_REPORTS = [
 
 export const AdminReportsPage = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const [reports, setReports] = useState(() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('campus_reports_list') || '[]');
+      return [...saved, ...MOCK_REPORTS];
+    } catch (e) {
+      return MOCK_REPORTS;
+    }
+  });
 
-  const filtered = MOCK_REPORTS.filter(r => {
+  const countAll = reports.length;
+  const countNew = reports.filter(r => r.status === 'new').length;
+  const countReviewing = reports.filter(r => r.status === 'reviewing').length;
+  const countResolved = reports.filter(r => r.status === 'resolved').length;
+  const countDismissed = reports.filter(r => r.status === 'dismissed').length;
+
+  const filtered = reports.filter(r => {
     if (activeTab === 'new') return r.status === 'new';
     if (activeTab === 'reviewing') return r.status === 'reviewing';
     if (activeTab === 'resolved') return r.status === 'resolved';
@@ -125,7 +139,7 @@ export const AdminReportsPage = () => {
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              Tất cả 6
+              Tất cả {countAll}
             </button>
             <button
               onClick={() => setActiveTab('new')}
@@ -135,7 +149,7 @@ export const AdminReportsPage = () => {
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              Mới gửi 2
+              Mới gửi {countNew}
             </button>
             <button
               onClick={() => setActiveTab('reviewing')}
@@ -145,7 +159,7 @@ export const AdminReportsPage = () => {
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              Đang xem xét 1
+              Đang xem xét {countReviewing}
             </button>
             <button
               onClick={() => setActiveTab('resolved')}
@@ -155,7 +169,7 @@ export const AdminReportsPage = () => {
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              Đã xử lý 2
+              Đã xử lý {countResolved}
             </button>
             <button
               onClick={() => setActiveTab('dismissed')}
@@ -165,7 +179,7 @@ export const AdminReportsPage = () => {
                   : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
               }`}
             >
-              Không xác nhận 1
+              Không xác nhận {countDismissed}
             </button>
           </div>
 

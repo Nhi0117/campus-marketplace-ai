@@ -84,21 +84,6 @@ export const LoginPage = () => {
     }, 300);
   };
 
-  const handleDemoLogin = (targetEmail) => {
-    setEmail(targetEmail);
-    setPassword('12345678');
-    setError('');
-    setNeedRegister(false);
-    const res = login(targetEmail, '12345678');
-    if (res.success) {
-      if (res.user?.isAdmin || targetEmail.toLowerCase().includes('admin')) {
-        navigate('/admin');
-      } else {
-        navigate('/');
-      }
-    }
-  };
-
   return (
     <div className="min-h-[calc(100vh-140px)] bg-slate-50 py-8 lg:py-14">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -316,23 +301,6 @@ export const LoginPage = () => {
                     ? 'Tài khoản Quản trị viên được phân quyền bảo mật cao. Sau khi đăng nhập sẽ vào thẳng Cổng Quản trị nội bộ.'
                     : 'Tài khoản được liên kết với email sinh viên trường thành viên ĐHQG-HCM để đảm bảo an toàn và tin cậy.'}
                 </span>
-              </div>
-
-              {/* Quick Login Demo */}
-              <div className="mt-6 pt-5 border-t border-slate-100 space-y-2">
-                <p className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                  Tài khoản sinh viên trải nghiệm (Demo)
-                </p>
-                <div>
-                  <button
-                    type="button"
-                    onClick={() => handleDemoLogin('minhanh@uel.edu.vn')}
-                    className="w-full px-3 py-2 rounded-lg border border-slate-200 hover:border-[#1557A0] hover:bg-blue-50/50 text-xs font-medium text-slate-700 text-left transition-colors flex items-center justify-between"
-                  >
-                    <span>👤 Minh Anh (ĐH Kinh tế - Luật)</span>
-                    <span className="text-[10px] text-slate-400">Đăng nhập thử 1 chạm →</span>
-                  </button>
-                </div>
               </div>
 
             </div>

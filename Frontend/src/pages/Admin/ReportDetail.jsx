@@ -1,24 +1,66 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
-import { ChevronLeft, Info, ExternalLink, Trash2, CheckCircle2, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { ChevronLeft, Info, ExternalLink, Trash2, CheckCircle2, AlertTriangle, ShieldCheck, Image as ImageIcon } from 'lucide-react';
 import { AdminSidebar } from './AdminSidebar';
-import { formatCurrency } from '../../utils/format';
+import { formatCurrency, getImageUrl } from '../../utils/format';
 
 export const AdminReportDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [decision, setDecision] = useState('dismissed'); // reviewing | resolved | dismissed
-  const [note, setNote] = useState('Tin đã ghi rõ pin chai nhẹ. Chưa đủ căn cứ kết luận vi phạm.');
+  const [decision, setDecision] = useState('reviewing'); // reviewing | resolved | dismissed
+  const [note, setNote] = useState('');
   const [isSaved, setIsSaved] = useState(false);
+
+  const reportsList = (() => {
+    try {
+      const saved = JSON.parse(localStorage.getItem('campus_reports_list') || '[]');
+      return [...saved];
+    } catch (e) {
+      return [];
+    }
+  })();
+
+  const currentReport = reportsList.find(r => r.id === id || r.id === `#${id}`) || null;
 
   const handleSaveResult = (e) => {
     e.preventDefault();
+    if (currentReport) {
+      const updatedList = reportsList.map(r => {
+        if (r.id === currentReport.id) {
+          return {
+            ...r,
+            status: decision,
+            statusText: decision === 'resolved' ? 'Đã xử lý' : decision === 'dismissed' ? 'Không xác nhận' : 'Đang xem xét',
+            statusBadge: decision === 'resolved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : decision === 'dismissed' ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-blue-50 text-[#1557A0] border border-blue-200',
+            hasActionBtn: decision === 'reviewing',
+            adminNote: note
+          };
+        }
+        return r;
+      });
+      localStorage.setItem('campus_reports_list', JSON.stringify(updatedList));
+    }
     setIsSaved(true);
     setTimeout(() => {
       navigate('/admin/reports');
     }, 1200);
   };
+
+  const handleRemoveListing = () => {
+    if (window.confirm('Xác nhận gỡ tin đăng này khỏi hệ thống do vi phạm tiêu chuẩn cộng đồng?')) {
+      alert('Đã gỡ tin đăng thành công! Trạng thái tin đã được chuyển sang "Đã gỡ" và người đăng sẽ nhận được thông báo.');
+      setDecision('resolved');
+      setNote('Đã tiến hành gỡ bỏ tin đăng vi phạm quy chế cộng đồng.');
+    }
+  };
+
+  const title = currentReport?.targetTitle || 'Laptop văn phòng cũ, RAM 8GB (pin chai nhẹ)';
+  const reasonText = currentReport?.reason || 'Mô tả không đúng thực tế hoặc che giấu khiếm khuyết';
+  const descText = currentReport?.description || 'Tin ghi pin chai nhẹ nhưng người bán nhắn máy chỉ dùng được khoảng 30 phút khi rút sạc.';
+  const reporterName = currentReport?.reporter || 'Hoàng Nam';
+  const reportDate = currentReport?.date ? `${currentReport.date} ${currentReport.time || ''}` : '10/11/2026 09:50';
+  const reportProd = currentReport?.product || null;
 
   return (
     <div className="flex bg-slate-50 min-h-[calc(100vh-64px)]">
@@ -46,7 +88,7 @@ export const AdminReportDetailPage = () => {
         <div className="flex items-center gap-3 mb-6">
           <h1 className="text-2xl font-bold text-slate-900">Chi tiết báo cáo #{id || '128'}</h1>
           <span className="px-3 py-1 rounded-full text-xs font-semibold bg-amber-50 text-amber-700 border border-amber-200">
-            Đang xem xét
+            {currentReport?.statusText || 'Đang xem xét'}
           </span>
         </div>
 
@@ -71,28 +113,39 @@ export const AdminReportDetailPage = () => {
               </div>
 
               <div className="p-4 rounded-xl bg-slate-50 border border-slate-200/80 flex items-start gap-3.5">
-                <div className="w-16 h-16 rounded-lg bg-blue-100 flex items-center justify-center shrink-0 text-xl font-bold text-[#1557A0]">
-                  💻
+                <div className="w-16 h-16 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                  {reportProd?.images && reportProd.images.length > 0 && reportProd.images[0] ? (
+                    <img
+                      src={encodeURI(getImageUrl(reportProd.images[0]))}
+                      alt={title}
+                      className="w-full h-full object-cover"
+                      onError={(e) => {
+                        e.target.onerror = null;
+                        e.target.src = getImageUrl('/image/products/gt_kinh_te_vi_mo.jfif');
+                      }}
+                    />
+                  ) : (
+                    <span className="text-xl font-bold text-[#1557A0]">💻</span>
+                  )}
                 </div>
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
                     <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#1557A0] text-white">Bán</span>
-                    <span className="px-2 py-0.5 rounded text-[10px] bg-slate-200 text-slate-700">Đã qua sử dụng</span>
+                    <span className="px-2 py-0.5 rounded text-[10px] bg-slate-200 text-slate-700">{reportProd?.condition || 'Đã qua sử dụng'}</span>
                   </div>
-                  <h3 className="font-bold text-sm text-slate-900 truncate">Laptop văn phòng cũ, RAM 8GB (pin chai nhẹ)</h3>
+                  <h3 className="font-bold text-sm text-slate-900 truncate">{title}</h3>
                   <div className="flex items-center justify-between mt-1 text-xs">
-                    <span className="font-bold text-[#1557A0]">{formatCurrency(4500000)}</span>
-                    <span className="text-slate-500">Người đăng: <strong className="text-slate-700">Đức Thịnh</strong></span>
+                    <span className="font-bold text-[#1557A0]">
+                      {reportProd?.price ? formatCurrency(reportProd.price) : 'Liên hệ'}
+                    </span>
+                    <span className="text-slate-500">Người đăng: <strong className="text-slate-700">{reportProd?.seller || 'Người bán'}</strong></span>
                   </div>
                 </div>
               </div>
 
               <div className="flex items-center justify-between text-xs pt-2">
-                <Link to="/products/prod_11" className="text-[#1557A0] font-semibold hover:underline inline-flex items-center gap-1">
+                <Link to={reportProd?.id ? `/products/${reportProd.id}` : "/products/prod_11"} className="text-[#1557A0] font-semibold hover:underline inline-flex items-center gap-1">
                   Xem chi tiết tin đăng →
-                </Link>
-                <Link to="/seller/user_3" className="text-[#1557A0] font-semibold hover:underline inline-flex items-center gap-1">
-                  Xem hồ sơ người bán →
                 </Link>
               </div>
             </div>
@@ -104,13 +157,13 @@ export const AdminReportDetailPage = () => {
               <div className="space-y-3 text-xs">
                 <div>
                   <span className="text-slate-400 block mb-0.5">Lý do</span>
-                  <p className="font-semibold text-slate-800">Mô tả không đúng thực tế hoặc che giấu khiếm khuyết</p>
+                  <p className="font-semibold text-slate-800">{reasonText}</p>
                 </div>
 
                 <div>
                   <span className="text-slate-400 block mb-0.5">Mô tả thêm</span>
-                  <p className="text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-100 leading-relaxed">
-                    Tin ghi pin chai nhẹ nhưng người bán nhắn máy chỉ dùng được khoảng 30 phút khi rút sạc.
+                  <p className="text-slate-700 bg-slate-50 p-3 rounded-xl border border-slate-100 leading-relaxed whitespace-pre-line">
+                    {descText || 'Không có mô tả thêm.'}
                   </p>
                 </div>
 
@@ -118,14 +171,16 @@ export const AdminReportDetailPage = () => {
                   <div>
                     <span className="text-slate-400 block mb-0.5">Người báo cáo</span>
                     <div className="flex items-center gap-1.5 font-semibold text-slate-800">
-                      <span className="w-5 h-5 rounded-full bg-blue-100 text-[#1557A0] text-[10px] flex items-center justify-center font-bold">HN</span>
-                      Hoàng Nam
+                      <span className="w-5 h-5 rounded-full bg-blue-100 text-[#1557A0] text-[10px] flex items-center justify-center font-bold">
+                        {reporterName.slice(0, 2).toUpperCase()}
+                      </span>
+                      {reporterName}
                     </div>
                   </div>
 
                   <div>
                     <span className="text-slate-400 block mb-0.5">Thời điểm gửi</span>
-                    <span className="font-medium text-slate-700">10/11/2026 09:50</span>
+                    <span className="font-medium text-slate-700">{reportDate}</span>
                   </div>
                 </div>
               </div>
@@ -148,36 +203,32 @@ export const AdminReportDetailPage = () => {
 
               <div className="grid grid-cols-2 gap-4">
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 text-center">
-                  <div className="aspect-video rounded-lg bg-slate-200 mb-2 flex items-center justify-center text-slate-400 text-xs">
-                    laptop_desk.jpg
+                  <span className="text-xs text-slate-400 block mb-2 font-mono">Bằng chứng 1</span>
+                  <div className="aspect-video rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">
+                    Ảnh chụp màn hình chat
                   </div>
-                  <span className="text-[11px] text-slate-500 font-mono">laptop_desk.jpg</span>
                 </div>
-
                 <div className="p-3 rounded-xl border border-slate-200 bg-slate-50 text-center">
-                  <div className="aspect-video rounded-lg bg-slate-200 mb-2 flex items-center justify-center text-slate-400 text-xs">
-                    battery_report.jpg
+                  <span className="text-xs text-slate-400 block mb-2 font-mono">Bằng chứng 2</span>
+                  <div className="aspect-video rounded-lg bg-slate-200 flex items-center justify-center text-xs text-slate-500">
+                    Ảnh chụp pin thiết bị
                   </div>
-                  <span className="text-[11px] text-slate-500 font-mono">battery_report.jpg</span>
                 </div>
               </div>
             </div>
 
           </div>
 
-          {/* CỘT PHẢI: Xử lý báo cáo */}
+          {/* CỘT PHẢI: Form xử lý của Admin */}
           <div className="lg:col-span-5 space-y-6">
-            
-            <form onSubmit={handleSaveResult} className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-sm space-y-5">
-              <div className="flex items-center justify-between pb-3 border-b border-slate-100">
-                <h3 className="font-bold text-sm text-slate-900">Xử lý báo cáo</h3>
-                <span className="text-xs text-slate-400">Người xử lý: <strong>Admin Khoa</strong></span>
-              </div>
+            <form onSubmit={handleSaveResult} className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-sm space-y-4">
+              <span className="text-xs font-bold text-slate-700 uppercase tracking-wider block">Kết quả xử lý</span>
 
-              <div>
-                <label className="block text-xs font-bold text-slate-700 mb-2.5">
-                  Kết quả xử lý <span className="text-red-500">*</span>
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-slate-700 block">
+                  Đánh giá báo cáo <span className="text-red-500">*</span>
                 </label>
+
                 <div className="space-y-2">
                   <label className="p-3 rounded-xl border border-slate-200 hover:border-slate-300 flex items-start gap-2.5 cursor-pointer text-xs">
                     <input
@@ -237,6 +288,7 @@ export const AdminReportDetailPage = () => {
                   rows={4}
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
+                  placeholder="Ghi chú kết luận kiểm tra của Quản trị viên..."
                   className="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 text-xs text-slate-800 leading-relaxed focus:outline-none focus:border-[#1557A0]"
                 />
               </div>
@@ -245,23 +297,23 @@ export const AdminReportDetailPage = () => {
                 ℹ Lưu kết quả không tự động ẩn tin. Thao tác gỡ tin được thực hiện riêng bên dưới.
               </div>
 
-              {/* Thao tác kiểm duyệt */}
+              {/* Thao tác gỡ tin */}
               <div className="pt-4 border-t border-slate-100 space-y-3">
                 <span className="text-xs font-bold text-slate-700 block">Thao tác kiểm duyệt</span>
                 <p className="text-[11px] text-slate-400">
                   Nếu tin vi phạm, bạn có thể gỡ tin. Lý do và người xử lý sẽ được ghi lại trong nhật ký hệ thống.
                 </p>
-
                 <div className="flex items-center justify-between gap-3">
                   <button
                     type="button"
+                    onClick={handleRemoveListing}
                     className="px-4 py-2 rounded-xl border border-red-300 text-red-600 hover:bg-red-50 text-xs font-bold flex items-center gap-1.5 transition-colors"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     Gỡ tin đăng
                   </button>
                   <Link
-                    to="/products/prod_11"
+                    to={reportProd?.id ? `/products/${reportProd.id}` : "/products/prod_11"}
                     className="text-xs font-semibold text-[#1557A0] hover:underline inline-flex items-center gap-1"
                   >
                     Mở trang tin gốc →
@@ -269,7 +321,7 @@ export const AdminReportDetailPage = () => {
                 </div>
               </div>
 
-              {/* Buttons */}
+              {/* Action buttons */}
               <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
                 <button
                   type="button"
@@ -285,8 +337,8 @@ export const AdminReportDetailPage = () => {
                   Lưu kết quả
                 </button>
               </div>
-            </form>
 
+            </form>
           </div>
 
         </div>
