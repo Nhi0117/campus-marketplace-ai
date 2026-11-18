@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Search, ArrowRight, ShieldCheck, CheckCircle } from 'lucide-react';
 import { CATEGORIES } from '../../data/categories';
+import { CategoryIcon } from '../../components/common/CategoryIcon';
 import { SCHOOLS } from '../../data/schools';
 import { useProducts } from '../../hooks/useProducts';
 import { ProductCard } from '../../components/common/ProductCard';
@@ -55,7 +56,7 @@ export const HomePage = () => {
             </form>
 
             {/* Quick tags */}
-            <div className="flex items-center gap-2 flex-wrap text-xs">
+<div className="flex items-center gap-2 flex-wrap text-xs">
               <span className="text-slate-500">Gợi ý nhanh:</span>
               {QUICK_TAGS.map(tag => (
                 <button key={tag} onClick={() => navigate(`/products?q=${encodeURIComponent(tag)}`)}
@@ -106,7 +107,7 @@ export const HomePage = () => {
       </section>
 
       {/* ─── CATEGORIES ───────────────────────────────────────────── */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+<section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-xl font-black text-slate-900">Danh mục</h2>
           <Link to="/products" className="text-xs font-semibold text-[#1557A0] flex items-center gap-1 hover:underline">
@@ -118,7 +119,9 @@ export const HomePage = () => {
           {CATEGORIES.filter(c => c.id !== 'all').map(cat => (
             <Link key={cat.id} to={`/products?category=${cat.id}`}
               className="flex flex-col items-center gap-3 p-5 bg-[#EBF4FF] rounded-2xl hover:bg-blue-100 hover:shadow-md transition group text-center border border-blue-100">
-              <span className="text-3xl">{cat.icon}</span>
+              <div className="w-14 h-14 rounded-2xl bg-white flex items-center justify-center shadow-sm group-hover:scale-110 group-hover:bg-[#1557A0] transition duration-300">
+                <CategoryIcon id={cat.id} className="w-7 h-7 text-slate-800 group-hover:text-white transition duration-300" strokeWidth={2.4} />
+              </div>
               <div>
                 <p className="text-sm font-bold text-slate-800 group-hover:text-[#1557A0] transition">{cat.name}</p>
                 <p className="text-[11px] text-slate-500 mt-0.5">{cat.description}</p>
@@ -142,6 +145,17 @@ export const HomePage = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {newProducts.map(p => <ProductCard key={p.id} product={p} />)}
+        </div>
+
+        {/* Nút Xem chi tiết dẫn qua tất cả danh mục sản phẩm */}
+        <div className="mt-8 flex justify-center">
+          <Link
+            to="/products"
+            className="inline-flex items-center gap-2.5 px-6 py-3 rounded-2xl bg-white border-2 border-[#1557A0] text-[#1557A0] font-bold text-sm hover:bg-[#1557A0] hover:text-white transition-all duration-200 shadow-xs hover:shadow-md group"
+          >
+            <span>Xem chi tiết tất cả danh mục sản phẩm</span>
+            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+          </Link>
         </div>
       </section>
 
@@ -182,7 +196,7 @@ export const HomePage = () => {
             <h3 className="text-xl font-black">Có đồ không dùng đến? Đăng tin ngay</h3>
             <p className="text-sm text-blue-200">Giúp các bạn khóa dưới tiết kiệm chi phí học tập và dọn dẹp phòng ký túc xá hôm nay.</p>
           </div>
-          <Link to="/create-listing"
+<Link to="/create-listing"
             className="shrink-0 px-6 py-3 bg-white text-[#1557A0] text-sm font-black rounded-xl hover:bg-blue-50 transition shadow flex items-center gap-2">
             + Đăng tin ngay
           </Link>

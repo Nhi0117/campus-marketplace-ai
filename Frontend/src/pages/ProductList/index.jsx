@@ -278,7 +278,7 @@ className="accent-[#1557A0]" />
                       className={`w-9 h-9 rounded-xl text-xs font-black transition-all ${
                         currentPage === pageNumber
                           ? 'bg-[#1557A0] text-white shadow-md shadow-blue-500/25 scale-105'
-: 'bg-white border border-slate-200 text-slate-700 hover:border-[#1557A0] hover:text-[#1557A0] hover:bg-blue-50/50'
+                          : 'bg-white border border-slate-200 text-slate-700 hover:border-[#1557A0] hover:text-[#1557A0] hover:bg-blue-50/50'
                       }`}
                     >
                       {pageNumber}

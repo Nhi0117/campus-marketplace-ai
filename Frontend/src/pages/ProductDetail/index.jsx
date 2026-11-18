@@ -54,7 +54,7 @@ export const ProductDetailPage = () => {
           product.status === 'pending'
             ? 'bg-amber-50 border-amber-200 text-amber-900'
             : product.status === 'rejected'
-            ? 'bg-red-50 border-red-200 text-red-900'
+? 'bg-red-50 border-red-200 text-red-900'
             : 'bg-slate-50 border-slate-200 text-slate-700'
         }`}>
           <div className="flex items-center gap-2.5">
@@ -83,7 +83,15 @@ export const ProductDetailPage = () => {
         <div className="lg:col-span-7 space-y-5">
           {/* Main Image */}
           <div className="relative aspect-[4/3] rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
-            <img src={product.images[activeImg] || product.images[0]} alt={product.title} className="w-full h-full object-cover" />
+            <img
+              src={encodeURI(product.images[activeImg] || product.images[0] || '/favicon.svg')}
+              alt={product.title}
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                e.target.onerror = null;
+                e.target.src = '/image/products/gt_kinh_te_vi_mo.jfif';
+              }}
+            />
             <span className="absolute bottom-3 right-3 bg-black/50 text-white text-xs px-2 py-1 rounded-full">
               {activeImg + 1}/{product.images.length}
             </span>
@@ -95,13 +103,20 @@ export const ProductDetailPage = () => {
               {product.images.map((img, i) => (
                 <button key={i} onClick={() => setActiveImg(i)}
                   className={`w-20 h-16 rounded-xl overflow-hidden border-2 transition ${i === activeImg ? 'border-[#1557A0]' : 'border-transparent opacity-60 hover:opacity-100'}`}>
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img
+                    src={encodeURI(img)}
+                    alt=""
+                    className="w-full h-full object-cover"
+                    onError={(e) => {
+                      e.target.onerror = null;
+                      e.target.src = '/image/products/gt_kinh_te_vi_mo.jfif';
+                    }}
+                  />
                 </button>
               ))}
             </div>
           )}
-
-          {/* Description */}
+{/* Description */}
           <div className="bg-white border border-slate-200 rounded-2xl p-6 space-y-4">
             <h3 className="text-base font-black text-slate-800">Mô tả sản phẩm</h3>
             <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed">{product.description}</p>
@@ -154,7 +169,7 @@ export const ProductDetailPage = () => {
           </div>
 
           {/* Title */}
-          <h1 className="text-xl font-black text-slate-900 leading-snug">{product.title}</h1>
+<h1 className="text-xl font-black text-slate-900 leading-snug">{product.title}</h1>
 
           {/* Price */}
           <div>
@@ -210,7 +225,7 @@ export const ProductDetailPage = () => {
               )}
               <div>
                 <div className="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
-                  {product.seller?.name}
+{product.seller?.name}
                   {product.seller?.verified && <ShieldCheck className="w-4 h-4 text-emerald-600" />}
                 </div>
                 <p className="text-xs text-slate-500">{product.seller?.school}</p>
