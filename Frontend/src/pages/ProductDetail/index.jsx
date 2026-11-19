@@ -17,11 +17,20 @@ export const ProductDetailPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { getProductById } = useProducts();
-  const { isSaved, toggleSaveProduct } = useAuth();
+  const { isSaved, toggleSaveProduct, user } = useAuth();
 
   const product = getProductById(id);
   const [activeImg, setActiveImg] = useState(0);
   const [copied, setCopied]       = useState(false);
+
+  const handleReport = () => {
+    if (!user) {
+      alert('Vui lòng đăng nhập tài khoản sinh viên ĐHQG-HCM để gửi báo cáo vi phạm!');
+      navigate('/login');
+      return;
+    }
+    navigate(`/report/${product.id}`);
+  };
 
   if (!product) return (
     <div className="max-w-2xl mx-auto py-24 px-4 text-center space-y-4">
@@ -209,8 +218,11 @@ export const ProductDetailPage = () => {
               {saved ? 'Đã lưu tin' : 'Lưu tin'}
             </button>
 
-            <button className="w-full text-xs text-slate-400 hover:text-slate-600 flex items-center justify-center gap-1 transition">
-              <Flag className="w-3.5 h-3.5" /> Báo cáo tin đăng
+            <button
+              onClick={handleReport}
+              className="w-full text-xs text-slate-400 hover:text-red-600 flex items-center justify-center gap-1.5 transition py-1"
+            >
+              <Flag className="w-3.5 h-3.5" /> Báo cáo tin đăng vi phạm
             </button>
           </div>
 

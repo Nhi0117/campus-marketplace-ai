@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { ChevronLeft, Info, ExternalLink, Trash2, CheckCircle2, AlertTriangle, ShieldCheck, Image as ImageIcon } from 'lucide-react';
 import { AdminSidebar } from './AdminSidebar';
+import { MOCK_REPORTS } from './Reports';
 import { formatCurrency, getImageUrl } from '../../utils/format';
 
 export const AdminReportDetailPage = () => {
@@ -15,31 +16,47 @@ export const AdminReportDetailPage = () => {
   const reportsList = (() => {
     try {
       const saved = JSON.parse(localStorage.getItem('campus_reports_list') || '[]');
-      return [...saved];
+      return [...saved, ...MOCK_REPORTS];
     } catch (e) {
-      return [];
+      return MOCK_REPORTS;
     }
   })();
 
-  const currentReport = reportsList.find(r => r.id === id || r.id === `#${id}`) || null;
+  const currentReport = reportsList.find(r => r.id === id || r.id === `#${id}` || r.id?.replace('#', '') === id) || null;
 
   const handleSaveResult = (e) => {
     e.preventDefault();
     if (currentReport) {
-      const updatedList = reportsList.map(r => {
-        if (r.id === currentReport.id) {
-          return {
-            ...r,
-            status: decision,
-            statusText: decision === 'resolved' ? 'Đã xử lý' : decision === 'dismissed' ? 'Không xác nhận' : 'Đang xem xét',
-            statusBadge: decision === 'resolved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : decision === 'dismissed' ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-blue-50 text-[#1557A0] border border-blue-200',
-            hasActionBtn: decision === 'reviewing',
-            adminNote: note
-          };
-        }
-        return r;
-      });
+      const savedList = JSON.parse(localStorage.getItem('campus_reports_list') || '[]');
+      const existsInSaved = savedList.some(r => r.id === currentReport.id);
+      let updatedList;
+      if (existsInSaved) {
+        updatedList = savedList.map(r => {
+          if (r.id === currentReport.id) {
+            return {
+              ...r,
+              status: decision,
+              statusText: decision === 'resolved' ? 'Đã xử lý' : decision === 'dismissed' ? 'Không xác nhận' : 'Đang xem xét',
+              statusBadge: decision === 'resolved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : decision === 'dismissed' ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-blue-50 text-[#1557A0] border border-blue-200',
+              hasActionBtn: decision === 'reviewing',
+              adminNote: note
+            };
+          }
+          return r;
+        });
+      } else {
+        const updated = {
+          ...currentReport,
+          status: decision,
+          statusText: decision === 'resolved' ? 'Đã xử lý' : decision === 'dismissed' ? 'Không xác nhận' : 'Đang xem xét',
+          statusBadge: decision === 'resolved' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : decision === 'dismissed' ? 'bg-slate-100 text-slate-600 border border-slate-200' : 'bg-blue-50 text-[#1557A0] border border-blue-200',
+          hasActionBtn: decision === 'reviewing',
+          adminNote: note
+        };
+        updatedList = [updated, ...savedList];
+      }
       localStorage.setItem('campus_reports_list', JSON.stringify(updatedList));
+      window.dispatchEvent(new Event('campus_reports_updated'));
     }
     setIsSaved(true);
     setTimeout(() => {
@@ -49,7 +66,18 @@ export const AdminReportDetailPage = () => {
 
   const handleRemoveListing = () => {
     if (window.confirm('Xác nhận gỡ tin đăng này khỏi hệ thống do vi phạm tiêu chuẩn cộng đồng?')) {
-      alert('Đã gỡ tin đăng thành công! Trạng thái tin đã được chuyển sang "Đã gỡ" và người đăng sẽ nhận được thông báo.');
+      const targetProdId = currentReport?.targetId || currentReport?.product?.id;
+      if (targetProdId) {
+        try {
+          const prods = JSON.parse(localStorage.getItem('campus_all_products_v3') || '[]');
+          const updatedProds = prods.map(p => String(p.id) === String(targetProdId) ? { ...p, status: 'deleted' } : p);
+          localStorage.setItem('campus_all_products_v3', JSON.stringify(updatedProds));
+          window.dispatchEvent(new Event('campus_products_updated'));
+        } catch (e) {
+          console.error(e);
+        }
+      }
+      alert('Đã gỡ tin đăng thành công! Trạng thái tin đã được chuyển sang "Đã gỡ" và không còn hiển thị.');
       setDecision('resolved');
       setNote('Đã tiến hành gỡ bỏ tin đăng vi phạm quy chế cộng đồng.');
     }

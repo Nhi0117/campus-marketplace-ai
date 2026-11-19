@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { Flag, Info, Eye, CheckCircle2, AlertCircle, ChevronRight } from 'lucide-react';
 import { AdminSidebar } from './AdminSidebar';
 
-const MOCK_REPORTS = [
+export const MOCK_REPORTS = [
   {
     id: '#128',
     targetType: 'Tin đăng',
@@ -86,6 +86,7 @@ const MOCK_REPORTS = [
 
 export const AdminReportsPage = () => {
   const [activeTab, setActiveTab] = useState('all');
+  const [targetTypeFilter, setTargetTypeFilter] = useState('all');
   const [reports, setReports] = useState(() => {
     try {
       const saved = JSON.parse(localStorage.getItem('campus_reports_list') || '[]');
@@ -95,6 +96,24 @@ export const AdminReportsPage = () => {
     }
   });
 
+  // Tự động đồng bộ báo cáo mới nhất ngay khi người dùng bấm gửi
+  React.useEffect(() => {
+    const handleSync = () => {
+      try {
+        const saved = JSON.parse(localStorage.getItem('campus_reports_list') || '[]');
+        setReports([...saved, ...MOCK_REPORTS]);
+      } catch (e) {
+        setReports(MOCK_REPORTS);
+      }
+    };
+    window.addEventListener('campus_reports_updated', handleSync);
+    window.addEventListener('storage', handleSync);
+    return () => {
+      window.removeEventListener('campus_reports_updated', handleSync);
+      window.removeEventListener('storage', handleSync);
+    };
+  }, []);
+
   const countAll = reports.length;
   const countNew = reports.filter(r => r.status === 'new').length;
   const countReviewing = reports.filter(r => r.status === 'reviewing').length;
@@ -102,10 +121,11 @@ export const AdminReportsPage = () => {
   const countDismissed = reports.filter(r => r.status === 'dismissed').length;
 
   const filtered = reports.filter(r => {
-    if (activeTab === 'new') return r.status === 'new';
-    if (activeTab === 'reviewing') return r.status === 'reviewing';
-    if (activeTab === 'resolved') return r.status === 'resolved';
-    if (activeTab === 'dismissed') return r.status === 'dismissed';
+    if (activeTab === 'new' && r.status !== 'new') return false;
+    if (activeTab === 'reviewing' && r.status !== 'reviewing') return false;
+    if (activeTab === 'resolved' && r.status !== 'resolved') return false;
+    if (activeTab === 'dismissed' && r.status !== 'dismissed') return false;
+    if (targetTypeFilter !== 'all' && r.targetType !== targetTypeFilter) return false;
     return true;
   });
 
@@ -184,10 +204,14 @@ export const AdminReportsPage = () => {
           </div>
 
           <div className="text-xs">
-            <select className="px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium focus:outline-none focus:border-[#1557A0]">
-              <option>Đối tượng: Tất cả đối tượng</option>
-              <option>Đối tượng: Tin đăng</option>
-              <option>Đối tượng: Tài khoản</option>
+            <select
+              value={targetTypeFilter}
+              onChange={(e) => setTargetTypeFilter(e.target.value)}
+              className="px-3 py-2 rounded-xl border border-slate-200 bg-white text-slate-700 font-medium focus:outline-none focus:border-[#1557A0]"
+            >
+              <option value="all">Đối tượng: Tất cả đối tượng</option>
+              <option value="Tin đăng">Đối tượng: Tin đăng</option>
+              <option value="Tài khoản">Đối tượng: Tài khoản</option>
             </select>
           </div>
         </div>
