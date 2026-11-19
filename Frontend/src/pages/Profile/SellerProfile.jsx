@@ -55,8 +55,8 @@ export const SellerProfilePage = () => {
       name,
       shortName: account?.shortName || sampleSeller.name || name,
       schoolName: account?.schoolName || sampleSeller.school || sellerProducts[0]?.schoolName || 'Đại học Quốc gia TP.HCM',
-      avatar: account?.avatar || sampleSeller.avatar || null,
-      initials: account?.initials || getInitials(name),
+      avatar: null,
+      initials: getInitials(sampleSeller.name || name),
       rating: sampleSeller.rating ?? account?.rating ?? 5.0,
       reviewCount: sampleSeller.reviewCount ?? account?.reviewCount ?? 0,
       listingCount: sellerProducts.length,
@@ -81,13 +81,9 @@ export const SellerProfilePage = () => {
         <div className="flex flex-col sm:flex-row items-center sm:items-start gap-5">
           {/* Avatar */}
           <div className="relative shrink-0">
-            {seller.avatar ? (
-              <img src={seller.avatar} alt="" className="w-24 h-24 rounded-full object-cover border-4 border-blue-50" />
-            ) : (
-              <div className="w-24 h-24 rounded-full bg-[#1557A0] text-white text-2xl font-black flex items-center justify-center">
-                {seller.initials}
-              </div>
-            )}
+            <div className="w-24 h-24 rounded-full bg-[#1557A0] text-white text-2xl font-black flex items-center justify-center">
+              {seller.initials}
+            </div>
             <div className="absolute bottom-1 right-1 w-6 h-6 bg-emerald-500 rounded-full border-2 border-white flex items-center justify-center">
               <ShieldCheck className="w-3.5 h-3.5 text-white" />
             </div>

@@ -225,13 +225,9 @@ export const ProductDetailPage = () => {
             <h4 className="text-sm font-black text-slate-800">Thông tin người bán</h4>
 
             <div className="flex items-center gap-3">
-              {product.seller?.avatar ? (
-                <img src={product.seller.avatar} alt="" className="w-12 h-12 rounded-full object-cover border border-slate-200" />
-              ) : (
-                <div className="w-12 h-12 rounded-full bg-[#1557A0] text-white font-black flex items-center justify-center">
-                  {product.seller?.name?.[0] || 'S'}
-                </div>
-              )}
+              <div className="w-12 h-12 rounded-full bg-[#1557A0] text-white font-black flex items-center justify-center">
+                {(product.seller?.name || 'SV').split(' ').filter(Boolean).map(w => w[0]).slice(-2).join('').toUpperCase()}
+              </div>
               <div>
                 <div className="flex items-center gap-1.5 font-bold text-slate-800 text-sm">
 {product.seller?.name}

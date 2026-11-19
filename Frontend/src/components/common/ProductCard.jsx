@@ -121,11 +121,7 @@ export const ProductCard = ({ product }) => {
         {/* Seller + School */}
         <div className="flex items-center justify-between pt-1 border-t border-slate-100">
           <div className="flex items-center gap-1.5 min-w-0">
-            {product.seller?.avatar ? (
-              <img src={product.seller.avatar} alt="" className="w-5 h-5 rounded-full object-cover shrink-0" />
-            ) : (
-              <User className="w-4 h-4 text-slate-400 shrink-0" />
-            )}
+            <User className="w-4 h-4 text-slate-400 shrink-0" />
             <span className="text-xs text-slate-500 font-medium truncate">
               {product.seller?.name} <span className="text-slate-400">({product.seller?.school})</span>
             </span>
