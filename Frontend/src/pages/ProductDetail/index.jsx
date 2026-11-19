@@ -246,7 +246,7 @@ export const ProductDetailPage = () => {
               </div>
             </div>
 
-            <Link to={`/seller/${product.seller?.id}`}>
+            <Link to={`/seller/${encodeURIComponent(product.seller?.id || 'guest')}?name=${encodeURIComponent(product.seller?.name || '')}`}>
               <button className="w-full border border-[#1557A0] text-[#1557A0] text-sm font-semibold py-2 rounded-xl hover:bg-blue-50 transition">
                 Xem hồ sơ người bán
               </button>

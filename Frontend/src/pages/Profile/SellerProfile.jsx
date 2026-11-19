@@ -1,22 +1,77 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState, useMemo } from 'react';
+import { Link, useParams, useSearchParams } from 'react-router-dom';
 import { ShieldCheck, Star, MessageCircle, Flag } from 'lucide-react';
 import { useProducts } from '../../hooks/useProducts';
+import { useAuth } from '../../context/AuthContext';
 import { USERS } from '../../data/users';
 import { ProductCard } from '../../components/common/ProductCard';
 
+const normalize = (s) => (s || '').toString().trim().toLowerCase();
+
+const getInitials = (name) =>
+  (name || 'SV')
+    .split(' ')
+    .filter(Boolean)
+    .map(w => w[0])
+    .slice(-2)
+    .join('')
+    .toUpperCase();
+
 export const SellerProfilePage = () => {
   const [tab, setTab] = useState('listings');
-  const seller = USERS[0]; // Mặc định xem profile Minh Anh
+  const { id } = useParams();
+  const [searchParams] = useSearchParams();
+  const nameParam = searchParams.get('name') || '';
   const { products } = useProducts();
-  const sellerProducts = products.filter(p => p.seller?.name === seller.shortName || p.seller?.name === seller.name);
-  const sellerListings = sellerProducts.filter(p => p.status === 'active');
+  const { usersList } = useAuth();
+
+  // Lọc đúng các tin đăng của người bán: khớp id và (nếu có) khớp tên
+  const sellerProducts = useMemo(() => {
+    const byId = products.filter(p => String(p.seller?.id) === String(id));
+    if (!nameParam) return byId;
+    const target = normalize(nameParam);
+    const byIdAndName = byId.filter(p => normalize(p.seller?.name) === target);
+    if (byIdAndName.length > 0) return byIdAndName;
+    // Trường hợp id không khớp nhưng tên khớp
+    return products.filter(p => normalize(p.seller?.name) === target);
+  }, [products, id, nameParam]);
+
+  const seller = useMemo(() => {
+    const sampleSeller = sellerProducts[0]?.seller || {};
+    const displayName = nameParam || sampleSeller.name || '';
+
+    // Tìm tài khoản trong hệ thống khớp cả id và tên (tránh nhầm sang tài khoản khác)
+    const allUsers = [...(usersList || []), ...USERS];
+    const account = allUsers.find(u =>
+      String(u.id) === String(id) &&
+      (!displayName ||
+        normalize(u.name) === normalize(displayName) ||
+        normalize(u.shortName) === normalize(displayName))
+    );
+
+    const name = account?.name || displayName || 'Sinh viên ĐHQG-HCM';
+    return {
+      id,
+      name,
+      shortName: account?.shortName || sampleSeller.name || name,
+      schoolName: account?.schoolName || sampleSeller.school || sellerProducts[0]?.schoolName || 'Đại học Quốc gia TP.HCM',
+      avatar: account?.avatar || sampleSeller.avatar || null,
+      initials: account?.initials || getInitials(name),
+      rating: sampleSeller.rating ?? account?.rating ?? 5.0,
+      reviewCount: sampleSeller.reviewCount ?? account?.reviewCount ?? 0,
+      listingCount: sellerProducts.length,
+      positiveRate: account?.positiveRate ?? 100,
+      joinedDate: account?.joinedDate || '2024-09-01',
+    };
+  }, [sellerProducts, usersList, id, nameParam]);
+
+  const sellerListings = sellerProducts.filter(p => !p.status || p.status === 'active');
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
       {/* Breadcrumb */}
       <nav className="text-xs text-slate-400 flex gap-1">
-        <a href="/" className="hover:text-[#1557A0]">Trang chủ</a><span>/</span>
+        <Link to="/" className="hover:text-[#1557A0]">Trang chủ</Link><span>/</span>
         <span>Người bán</span><span>/</span>
         <span className="text-slate-800 font-medium">{seller.name}</span>
       </nav>
@@ -115,6 +170,9 @@ export const SellerProfilePage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {sellerListings.map(p => <ProductCard key={p.id} product={p} />)}
           </div>
+          {sellerListings.length === 0 && (
+            <p className="text-center text-sm text-slate-400 py-10">Người bán này hiện chưa có tin đăng nào đang hiển thị.</p>
+          )}
         </div>
       )}
 
